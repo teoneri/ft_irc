@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/09 16:47:33 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/10 15:47:36 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <sstream>
 #include "Client.hpp"
 #include "Error.hpp"
+#include "Utils.hpp"
 
 class Server
 {
@@ -49,9 +50,11 @@ class Server
 		void CloseFds();
 		void removeClient(int fd);
 		Client *getClient(int fd);
+		std::string truncBuffEnd(std::string buff);
 		std::vector<std::string> splitBuffCommand(std::string buff);
-		void parseCommand(int fd);
-		void PASS(int fd);
-		void NICK(int fd);
+		void parseCommand(int fd, std::vector<std::string> cmd);
+		void PASS(int fd, std::vector<std::string> cmd);
+		void NICK(int fd, std::vector<std::string> cmd);
+		void USER(int fd, std::vector<std::string> cmd);
 
 };

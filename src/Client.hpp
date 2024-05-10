@@ -19,10 +19,13 @@ class Client
 		int _fd;
 		std::string _IPaddr;
 		std::string _username;
+		std::string _realname;
 		std::string _nickname;
 		std::string _buff;
 		bool logged;
-		// bool registered;
+		bool nicked;
+		bool usered;
+		bool registered;
 	public:
 		Client();
 		~Client();
@@ -34,6 +37,17 @@ class Client
 		void setBuff(std::string buff);
 		void setLogged(bool bool_);
 		bool getLogged();
+		bool getRegistered();
+		bool getUsered();
+		bool getNicked();
+		void setNicked(bool bool_);
+		void setUsered(bool bool_);
+		void setRegistered(bool bool_);
 		std::string getBuff(){return _buff;}
 		std::string getNick();
+		std::string getUser();
+		void setUser(std::string user);
+		std::string getRealname();
+		void setRealname(std::string realname);
+
 };

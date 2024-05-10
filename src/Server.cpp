@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/09 17:59:42 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/10 16:14:51 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void Server::ServerInit(int port, std::string pass)
 	this->_port = port;
 	this->_password = pass;
 	SerSocket();
-	std::cout << "\e[1;32mServer " << _serverSocket << "connected\e[0;37m" << std::endl;
-	std::cout << "Waiting to accept connection...\n";
+	std::cout << GREEN << "Server " << _serverSocket << " connected" << WHITE << std::endl;
+	std::cout << YELLOW << "Waiting to accept connection...\n" << WHITE;
 	while(Server::_signal == false)
 	{
 		if((poll(&fds[0], fds.size(), -1) == -1) && Server::_signal == false)
@@ -140,9 +140,8 @@ void Server::removeClient(int fd)
 	}
 }
 
-std::vector<std::string> Server::splitBuffCommand(std::string buff)
+std::string Server::truncBuffEnd(std::string buff)
 {
-	std::vector<std::string> vec;
 	std::istringstream iss(buff);
 	std::string line;
 	while(std::getline(iss, line))
@@ -150,7 +149,20 @@ std::vector<std::string> Server::splitBuffCommand(std::string buff)
 		size_t pos = line.find_first_of("\r\n");
 		if(pos != std::string::npos)
 			line = line.substr(0, pos);
-		vec.push_back(line);
+		break;
+	}
+	return line;
+}
+
+std::vector<std::string> Server::splitBuffCommand(std::string buff)
+{
+	std::istringstream iss(buff);
+	std::string token;
+	std::vector<std::string> vec;
+	while(iss >> token)
+	{
+		vec.push_back(token);
+		token.clear();	
 	}
 	return vec;
 }
@@ -159,12 +171,14 @@ std::vector<std::string> Server::splitBuffCommand(std::string buff)
 void Server::ReceiveNewData(int fd)
 {
 	char buff[1024];
+	std::string tmp;
+	std::vector<std::string> cmd;
 	memset(buff, 0, sizeof(buff));
 	Client *client = getClient(fd);
 	ssize_t bytes = recv(fd, buff, sizeof(buff) - 1, 0);
 	if(bytes <= 0)
 	{
-		std::cout << "Client disconnected\n";
+		std::cout << RED << "Client " << client->getNick() << " <" << client->getFd() << "> " << " disconnected\n" << WHITE;
 		removeClient(fd);
 		close(fd);
 	}
@@ -173,37 +187,96 @@ void Server::ReceiveNewData(int fd)
 		client->setBuff(buff);
 		if(client->getBuff().find_first_of("\r\n") == std::string::npos)
 			return;
-		_cmd = splitBuffCommand(buff);
-		parseCommand(fd);
-		
+		tmp = truncBuffEnd(buff);
+		cmd = splitBuffCommand(tmp);
+		parseCommand(fd, cmd);
 	}
 }
 
-void Server::parseCommand(int fd)
+void Server::parseCommand(int fd, std::vector<std::string> cmd)
 {
 
-	if((_cmd[0] == "PASS" || _cmd[0] == "pass"))
-		PASS(fd);
-	if((_cmd[0] == "NICK" || _cmd[0] == "nick"))
-		NICK(fd);
+	if((cmd[0] == "PASS" || cmd[0] == "pass"))
+		PASS(fd, cmd);
+	else if((cmd[0] == "NICK" || cmd[0] == "nick"))
+		NICK(fd, cmd);
+	else if((cmd[0] == "USER" || cmd[0] == "user"))
+		USER(fd, cmd);
 }
 
-void Server::PASS(int fd)
+void Server::PASS(int fd, std::vector<std::string> cmd)
 {
 	Client *cli = getClient(fd);
-	if(_cmd.size() < 2)
+	if(cmd.size() < 2)
 		ERR_NEEDMOREPARAMS(cli, "PASS");
-	else if(_cmd[1] == _password)
-	{
-		if(cli->getLogged() == true)
+	else if(cli->getLogged() == true)
 			ERR_ALREADYREGISTERED(cli);
-		else
+	else if(cmd[1] == _password)
 			cli->setLogged(true);
+	else
+		ERR_PASSWDMISMATCH(cli);
+}
+
+
+void Server::NICK(int fd, std::vector<std::string> cmd)
+{
+	Client *cli = getClient(fd);
+	
+	if(cmd.size() == 1)
+	{
+		ERR_NONICKNAMEGIVEN(cli);
+		return;
+	}
+	else if(!cli->getLogged())
+	{
+		ERR_NOTREGISTERED(cli);
+		return ;
+	}	
+	else if(cmd[1].find_first_of('#') == 0 || cmd[1].find_first_of(':') == 0 || cmd.size() < 2)
+	{
+		ERR_ERRONEUSNICKNAME(cli, cmd[1]);
+		return;
+	}
+	for(size_t i = 0; i < clients.size(); i++)
+	{
+		if(cmd[1] == clients[i].getNick())
+		{
+			ERR_NICKNAMEINUSE(cli, cmd[1]);
+			return;
+		}
+	}
+	cli->setNick(cmd[1]);
+	if(cli->getUsered())
+	{
+		cli->setRegistered(true);
+		RPL_WELCOME(cli);
 	}
 }
 
-void Server::NICK(int fd)
+void Server::USER(int fd, std::vector<std::string> cmd)
 {
-	// Client *cli = getClient(fd);
-	(void)fd;
+	Client *cli = getClient(fd);
+	std::string name;
+	if(cmd.size() < 5)
+		ERR_NEEDMOREPARAMS(cli, "USER");
+	else if(!cli->getUser().empty())
+		ERR_ALREADYREGISTERED(cli);
+	else
+	{
+		cli->setRealname(cmd[1]);
+		for(size_t i = 4; i < cmd.size(); i++)
+		{
+			name += cmd[i];
+			if(i != cmd.size() - 1)
+				name += " ";
+		}
+		cli->setUsername(name);
+		cli->setUsered(true);
+		if(cli->getNicked())
+		{
+			cli->setRegistered(true);
+			RPL_WELCOME(cli);
+		}
+			
+	}
 }

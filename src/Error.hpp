@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/09 17:54:52 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/10 16:11:49 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,3 +18,12 @@
 // ERRORS //
 void ERR_ALREADYREGISTERED(Client *client);
 void ERR_NEEDMOREPARAMS(Client *client, std::string cmd);
+void ERR_PASSWDMISMATCH(Client *client);
+void ERR_ERRONEUSNICKNAME(Client *client, std::string nick);
+void ERR_NONICKNAMEGIVEN(Client *client);
+void ERR_NICKNAMEINUSE(Client *client, std::string nick);
+void ERR_NOTREGISTERED(Client *client);
+
+// RESPONSES //
+
+void RPL_WELCOME(Client *client);
