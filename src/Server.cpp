@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/10 16:14:51 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/13 17:12:14 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,11 @@ void Server::AcceptNewClient()
 
 Client *Server::getClient(int fd)
 {
-	for(size_t i = 0; i < clients.size(); i++)
+	std::vector<Client>::iterator it = clients.begin();
+	for(it; it != clients.end(); it++)
 	{
-		if(fd == clients[i].getFd())
-		{
-			return &clients[i];
-		}
+		if(it->getFd() == fd)
+			return &(*it);
 	}
 	return NULL;
 }
@@ -195,13 +194,15 @@ void Server::ReceiveNewData(int fd)
 
 void Server::parseCommand(int fd, std::vector<std::string> cmd)
 {
-
 	if((cmd[0] == "PASS" || cmd[0] == "pass"))
 		PASS(fd, cmd);
 	else if((cmd[0] == "NICK" || cmd[0] == "nick"))
 		NICK(fd, cmd);
 	else if((cmd[0] == "USER" || cmd[0] == "user"))
 		USER(fd, cmd);
+	else if((cmd[0] == "JOIN" || cmd[0] == "join"))
+		JOIN(fd, cmd);
+
 }
 
 void Server::PASS(int fd, std::vector<std::string> cmd)
@@ -246,6 +247,7 @@ void Server::NICK(int fd, std::vector<std::string> cmd)
 		}
 	}
 	cli->setNick(cmd[1]);
+	cli->setNicked(true);
 	if(cli->getUsered())
 	{
 		cli->setRegistered(true);
@@ -263,20 +265,20 @@ void Server::USER(int fd, std::vector<std::string> cmd)
 		ERR_ALREADYREGISTERED(cli);
 	else
 	{
-		cli->setRealname(cmd[1]);
+		cli->setUsername(cmd[1]);
 		for(size_t i = 4; i < cmd.size(); i++)
 		{
 			name += cmd[i];
 			if(i != cmd.size() - 1)
 				name += " ";
 		}
-		cli->setUsername(name);
+		cli->setRealname(name);
 		cli->setUsered(true);
 		if(cli->getNicked())
 		{
 			cli->setRegistered(true);
 			RPL_WELCOME(cli);
 		}
-			
 	}
 }
+
