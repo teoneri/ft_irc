@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/13 16:44:16 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/16 17:58:17 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ std::string Channel::getTopic()
 
 Client *Channel::getClient(int fd)
 {
-	std::vector<Client>::iterator it = clients.begin();
-	for(it; it != clients.end(); it++)
+	std::vector<Client>::iterator it;
+	for(it= clients.begin(); it != clients.end(); it++)
 	{
 		if(it->getFd() == fd)
 			return &(*it);
@@ -49,8 +49,19 @@ Client *Channel::getClient(int fd)
 
 Client *Channel::getAdmins(int fd)
 {
-	std::vector<Client>::iterator it = admins.begin();
-	for(it; it != admins.end(); it++)
+	std::vector<Client>::iterator it;
+	for(it = admins.begin(); it != admins.end(); it++)
+	{
+		if(it->getFd() == fd)
+			return &(*it);
+	}
+	return NULL;
+}
+
+Client *Channel::getInvited(int fd)
+{
+	std::vector<Client>::iterator it;
+	for(it = admins.begin(); it != invited.end(); it++)
 	{
 		if(it->getFd() == fd)
 			return &(*it);
@@ -60,7 +71,7 @@ Client *Channel::getAdmins(int fd)
 
 void Channel::setName(std::string name)
 {
-	_name = name
+	_name = name;
 }
 
 void Channel::setPassword(std::string password)
@@ -78,7 +89,40 @@ void Channel::addClient(Client *client)
     clients.push_back(*client);
 }
 
-void Channel::addClient(Client *client)
+void Channel::addAdmins(Client *client)
 {
-    clients.push_back(*client);
+    admins.push_back(*client);
+}
+
+void Channel::addInvited(Client *client)
+{
+    invited.push_back(*client);
+}
+
+std::string Channel::getTopic()
+{
+	return _topic;
+}
+std::string Channel::getPassword()
+{
+	return _password
+}
+
+bool Channel::getInvonly()
+{
+	return inv_only;
+}
+
+void Channel::setInvonly(bool inv)
+{
+	inv_only = inv;
+}
+
+void Channel::sendToChannel(std::string msg)
+{
+	std::vector<Client>::iterator it;
+	for(it = clients.begin(); it != clients.end(); it++)
+	{
+		sendMsg(&(*it), msg);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/13 17:12:14 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/16 17:35:12 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,8 @@ void Server::AcceptNewClient()
 
 Client *Server::getClient(int fd)
 {
-	std::vector<Client>::iterator it = clients.begin();
-	for(it; it != clients.end(); it++)
+	std::vector<Client>::iterator it;
+	for(it = clients.begin(); it != clients.end(); it++)
 	{
 		if(it->getFd() == fd)
 			return &(*it);
@@ -200,9 +200,13 @@ void Server::parseCommand(int fd, std::vector<std::string> cmd)
 		NICK(fd, cmd);
 	else if((cmd[0] == "USER" || cmd[0] == "user"))
 		USER(fd, cmd);
-	else if((cmd[0] == "JOIN" || cmd[0] == "join"))
-		JOIN(fd, cmd);
-
+	if(getClient(fd)->getRegistered() == true)
+	{
+		if((cmd[0] == "JOIN" || cmd[0] == "join"))
+			JOIN(fd, cmd);
+	}
+	else
+		ERR_NOTREGISTERED(getClient(fd));
 }
 
 void Server::PASS(int fd, std::vector<std::string> cmd)

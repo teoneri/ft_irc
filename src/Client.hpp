@@ -46,6 +46,7 @@ class Client
 		std::string getBuff(){return _buff;}
 		std::string getNick();
 		std::string getUser();
+		std::string getIPaddr();
 		void setUser(std::string user);
 		std::string getRealname();
 		void setRealname(std::string realname);

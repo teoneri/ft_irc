@@ -21,6 +21,7 @@ SRCS        :=      src/Server.cpp \
                           src/Utils.cpp \
                           src/Client.cpp \
 						  src/Error.cpp \
+						  src/JOIN.cpp \
                           
 OBJS        := ${SRCS:.cpp=.o}
 
@@ -69,7 +70,8 @@ SRCS        :=      src/Server.cpp \
                           src/Channel.cpp \
                           src/Utils.cpp \
                           src/Client.cpp \
-						  src/Error.cpp
+						  src/Error.cpp \
+						  src/JOIN.cpp \
                           
 OBJS        := ${SRCS:.cpp=.o}
 

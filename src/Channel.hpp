@@ -6,11 +6,14 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:45:39 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/13 16:39:52 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/16 17:50:32 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
+
 #include "Client.hpp"
+#include "Error.hpp"
 
 class Client;
 
@@ -22,6 +25,8 @@ class Channel
 		std::string _topic;
 		std::vector<Client> clients;	
 		std::vector<Client> admins;
+		std::vector<Client> invited;
+		bool inv_only;
 	public:
 		Channel();
 		~Channel();
@@ -31,8 +36,15 @@ class Channel
 		void setName(std::string name);
 		void setPassword(std::string password);
 		void setTopic(std::string topic);
+		std::string getTopic();
+		std::string getPassword();
 		Client *getClient(int fd);
 		Client *getAdmins(int fd);
+		Client *getInvited(int fd);
 		void addClient(Client *client);
 		void addAdmins(Client *client);
+		void addInvited(Client *client);
+		bool getInvonly();
+		void setInvonly(bool inv);
+		void sendToChannel(std::string msg);
 };

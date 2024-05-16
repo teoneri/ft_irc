@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:57:54 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/10 16:18:34 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/16 15:22:37 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,3 +112,12 @@ void Client::setRealname(std::string realname)
 	_realname = realname;
 }
 
+std::string Client::getIPaddr()
+{
+	return _IPaddr;
+}
+
+bool Client::getRegistered()
+{
+	return registered;
+}
