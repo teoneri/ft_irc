@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:28:37 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/16 18:05:57 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/17 18:07:12 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,16 @@ void ERR_NICKNAMEINUSE(Client *client, std::string nick){std::string str =  std:
 void ERR_NOTREGISTERED(Client *client){std::string str =  std::string(RED) + " ERR_NONICKNAMEGIVEN (431) " + "<" + client->getNick() + "> " + ":No nickname given\n" + WHITE; sendMsg(client, str);}
 void ERR_NOSUCHCHANNEL(Client *client, std::string channel){std::string str = std::string(RED) + "ERR_NOSUCHCHANNEL (403) " + "<" + client->getNick() + "> " + channel + ":No such channel\n" + WHITE; sendMsg(client, str);}
 void ERR_TOOMANYCHANNELS(Client *client, std::string channel){std::string str =  std::string(RED) + "ERR_TOOMANYCHANNELS (405) " + "<" + client->getNick() + "> " + channel + ":You have joined too many channels\n" + WHITE; sendMsg(client, str);}
-void ERR_BADCHANNELKEY(Client *client, std::string channel){std::string str = std::string(RED) + "ERR_BADCHANNELKEY (475) " + "<" + client->getNick() + "> " + channel + " :Cannot join channel (+k)\n"; sendMsg(client, str);}
-void ERR_ALREADYJOIN(Client *client, std::string channelname){std::string str = std::string(RED) + client->getNick() + " already joined " + channelname + "\n"; sendMsg(client, str);}
-void ERR_INVITEONLYCHAN(Client *client, std::string channelname){std::string str = std::string(RED) + "ERR_INVITEONLYCHAN (473) " + "<" + client->getNick() + "> " + channelname + " :Cannot join channel (+i)\n"; sendMsg(client, str);}
+void ERR_BADCHANNELKEY(Client *client, std::string channel){std::string str = std::string(RED) + "ERR_BADCHANNELKEY (475) " + "<" + client->getNick() + "> " + channel + " :Cannot join channel (+k)\n" + WHITE; sendMsg(client, str);}
+void ERR_ALREADYJOIN(Client *client, std::string channelname){std::string str = std::string(RED) + client->getNick() + " already joined " + channelname + "\n" + WHITE; sendMsg(client, str);}
+void ERR_INVITEONLYCHAN(Client *client, std::string channelname){std::string str = std::string(RED) + "ERR_INVITEONLYCHAN (473) " + "<" + client->getNick() + "> " + channelname + " :Cannot join channel (+i)\n" + WHITE; sendMsg(client, str);}
+void ERR_NOSUCHCHANNEL(Client *client, std::string channel){std::string str = std::string(RED) + "ERR_NOSUCHCHANNEL (403) " + "<" + client->getNick() + "> " + channel + " :No such channel\n" + WHITE; sendMsg(client, str);}
+void ERR_CHANOPRIVSNEEDED(Client *client, std::string channel){std::string str = std::string(RED) + "ERR_CHANOPRIVSNEEDED (482) " + "<" + client->getNick() + "> " + channel + " :You're not channel operator\n" + WHITE; sendMsg(client, str);}
+void ERR_INVALIDMODEPARAM(Client *client, std::string channel, std::string param){std::string str = std::string(RED) + "ERR_INVALIDMODEPARAM (696) " + "<" + client->getNick() + "> " + channel + " :Missing parameter for MODE (" + param + ") \n" + WHITE; sendMsg(client, str);}
 //REPLIES// 
 
 void RPL_WELCOME(Client *client){std::string str = "<" + client->getNick() + "> Welcome to the IRC server!\n"; sendMsg(client, str);}
-void RPL_JOINCHANNEL(Client *client, std::string channelname){std::string str = client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " JOIN " + channelname + "\n"; sendMsg(client, str);}
+void RPL_CHANNELMODEIS(Client *client, std::string channel, std::string modestring){std::string str = "RPL_CHANNELMODEIS (324) <" + client->getNick() + "> " + channel + " " + modestring;}
+
+// CHANNEL ERRORS // 
+std::string RPL_JOINCHANNEL(Client *client, std::string channelname){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " JOIN " + channelname + "\n";}

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/16 17:36:48 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/17 16:23:23 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ class Server
 		void CloseFds();
 		void removeClient(int fd);
 		Client *getClient(int fd);
+		Channel *getChannel(std::string channelname);
 		std::string truncBuffEnd(std::string buff);
 		std::vector<std::string> splitBuffCommand(std::string buff);
 		void parseCommand(int fd, std::vector<std::string> cmd);
@@ -61,5 +62,5 @@ class Server
 		void NICK(int fd, std::vector<std::string> cmd);
 		void USER(int fd, std::vector<std::string> cmd);
 		void JOIN(int fd, std::vector<std::string> cmd);
-
+		void MODE(int fd, std::vector<std::string> cmd);
 };

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/16 17:59:06 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/17 17:23:51 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void Server::channelNotFound(Client *client, std::string name)
 	channel.setName(name);
 	channel.addAdmins(client);
 	channels.push_back(channel);
-	RPL_JOINCHANNEL(client, name);
+	channel.sendToChannel(RPL_JOINCHANNEL(client, name));
 }
 
 void Server::channelFound(Client *client, Channel *channel, std::vector<std::string> cmd, int fd)
@@ -45,8 +45,13 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
 			return;
 		}
 	}
+	if(channel->getClientcap() >= 0 && channel->countClients() > 10)
+	{
+		sendMsg(client, "Client cap exceeded.\n");
+		return;
+	}
 	channel->addClient(client);
-	channel->sendToChannel()
+	channel->sendToChannel(RPL_JOINCHANNEL(client, cmd[1]));
 }
 
 

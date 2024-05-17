@@ -6,14 +6,15 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/16 17:58:17 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/17 17:43:14 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
-Channel::Channel()
+Channel::Channel() 
 {
+	client_cap = -1;
 }
 
 Channel::~Channel()
@@ -118,6 +119,26 @@ void Channel::setInvonly(bool inv)
 	inv_only = inv;
 }
 
+bool Channel::getAdmtopic()
+{
+	return adm_topic
+}
+
+void Channel::setAdmtopic(bool adm)
+{
+	adm_topic = amd;
+}
+
+int Channel::getClientcap()
+{
+	return client_cap;
+}
+		
+void Channel::setClientcap(int cap)
+{
+	client_cap = cap;
+}
+
 void Channel::sendToChannel(std::string msg)
 {
 	std::vector<Client>::iterator it;
@@ -126,3 +147,19 @@ void Channel::sendToChannel(std::string msg)
 		sendMsg(&(*it), msg);
 	}
 }
+
+size_t Channel::countClients()
+{
+	return clients.size();
+}
+
+std::vector<std::string> Channel::getModes()
+{
+	return modes;
+}
+
+void Channel::addModes(std::string mode)
+{
+	modes.push_back(mode);
+}
+

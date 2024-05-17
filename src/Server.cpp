@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/16 17:35:12 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/17 16:26:32 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,18 @@ void Server::removeClient(int fd)
 		}
 	}
 }
+
+Channel *Server::getChannel(std::string channelname)
+{
+	std::vector<Channel>::iterator it;
+	for(it = channels.begin(); it != channels.end(); it++)
+	{
+		if(it->getName() == channelname)
+			return &(*it);
+	}
+	return NULL;
+}
+
 
 std::string Server::truncBuffEnd(std::string buff)
 {
