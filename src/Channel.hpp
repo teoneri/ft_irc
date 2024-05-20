@@ -6,12 +6,13 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:45:39 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/17 17:43:23 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/20 18:22:32 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <algorithm>
 #include "Client.hpp"
 #include "Error.hpp"
 
@@ -40,11 +41,10 @@ class Channel
 		Client *getClient(int fd);
 		Client *getAdmins(int fd);
 		Client *getInvited(int fd);
+		Client *getClientInChannel(int fd);
 		bool getInvonly();
 		bool getAdmtopic();
 		int getClientcap();
-		std::string getTopic();
-		std::string getPassword();
 		std::vector<std::string> getModes();
 		//setters
 		void setName(std::string name);
@@ -61,7 +61,8 @@ class Channel
 		void sendToChannel(std::string msg);
 		std::string displayMode();
 		size_t countClients();
-		void addMode(Client *client, std::string cmd);
+		void remAdmins(Client *client);
+		void addMode(Client *client, std::vector<std::string> cmd, std::string mode);
 		void remMode(Client *client, std::string cmd);
 
 };

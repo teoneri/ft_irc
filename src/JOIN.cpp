@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/17 17:23:51 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/20 17:46:05 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,16 @@
 
 void Server::channelNotFound(Client *client, std::string name)
 {
-	Channel channel;
-	channel.setName(name);
-	channel.addAdmins(client);
-	channels.push_back(channel);
-	channel.sendToChannel(RPL_JOINCHANNEL(client, name));
+	Channel newChannel;
+	newChannel.setName(name);
+	newChannel.addAdmins(client);
+	newChannel.addClient(client);
+	channels.push_back(newChannel);
+	Channel& chan = channels.back();
+    std::string joinMessage = RPL_JOINCHANNEL(client, name);
+    chan.sendToChannel(joinMessage);
 }
+
 
 void Server::channelFound(Client *client, Channel *channel, std::vector<std::string> cmd, int fd)
 {
@@ -73,7 +77,7 @@ void Server::JOIN(int fd, std::vector<std::string> cmd)
 	{
 		if(cmd[1] == channels[i].getName())
 		{
-			channelFound(cli, channel[i], cmd, fd);
+			channelFound(cli, &channels[i], cmd, fd);
 			return;
 		}	
 	}

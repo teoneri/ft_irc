@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 16:18:35 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/17 18:20:32 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/20 18:41:21 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,25 +70,88 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 		}
 		case 'l':
 		{
-			if(arg + 1 < cmd.size() && isAllNumbers(cmd[arg]))
+			if(arg + 1 < cmd.size() && !isAllNumbers(cmd[arg]))
 			{
 				ERR_INVALIDMODEPARAM(client, cmd[1], "l");
 				return ;
 			}
-			else if(client_cap < 0 )
+			else if(client_cap < 0)
 				client_cap = std::atoi(cmd[arg].c_str());
+			arg++;
 		}
 		default:
-			break;
+		{
+			ERR_UNKNOWNMODE(client);
+			return;
+		}
 		}
 	}
 	
 }
 
-void Channel::remMode(Client *client, std::string cmd)
+void Channel::remMode(Client *client, std::string mode)
 {
-	
-}
+	std::vector<std::string>::iterator it;
+
+	for(int i = 0; mode[i]; i++)
+	{
+		switch (mode[i])
+		{
+		case 'i':
+		{
+			if(inv_only == true)
+			{
+		        it = std::find(modes.begin(), modes.end(), "i");
+				inv_only = false;
+				modes.erase(it);
+			}
+			break;
+		}
+		case 't':
+		{
+			if(adm_topic == true)
+			{
+		        it = std::find(modes.begin(), modes.end(), "t");
+				adm_topic = false;
+				modes.erase(it);
+			}
+			break;
+		}
+		case 'k':
+		{
+			if(!_password.empty())
+			{
+		        it = std::find(modes.begin(), modes.end(), "k");
+				_password.clear();
+				modes.erase(it);
+			}
+			break;
+		}
+		case 'o':
+		{
+			if(client == getAdmins(client->getFd()))
+			{
+		        it = std::find(modes.begin(), modes.end(), "o");
+				remAdmins(client);
+				modes.erase(it);
+
+			}
+			break;
+		}
+		case 'l':
+		{
+			if(client_cap > 0 )
+			{
+		        it = std::find(modes.begin(), modes.end(), "l");
+				client_cap = -1;
+				modes.erase(it);
+			}
+		}
+		default:
+			break;
+		}
+	}
+	}
 
 std::string Channel::displayMode()
 {
@@ -112,14 +175,14 @@ void Server::MODE(int fd, std::vector<std::string> cmd)
 		return;
 	}
 	Channel *channel = getChannel(cmd[1]);
-	if(channel->getAdmins(fd) != cli)
-	{
-		ERR_CHANOPRIVSNEEDED(cli, cmd[1]);
-		return;
-	}
 	if(!channel)
 	{
 		ERR_NOSUCHCHANNEL(cli, cmd[1]);
+		return;
+	}
+	if(channel->getClientInChannel(fd) != channel->getAdmins(fd))
+	{
+		ERR_CHANOPRIVSNEEDED(cli, cmd[1]);
 		return;
 	}
 	if(cmd.size() == 2)
@@ -128,8 +191,8 @@ void Server::MODE(int fd, std::vector<std::string> cmd)
 		return ;
 	}
 	if(cmd[2][0] == '+')
-		channel->addMode(cli, cmd[2].substr(0, cmd[2].size() - 1));
+		channel->addMode(cli, cmd, cmd[2].substr(1));
 	else if(cmd[2][0] == '-')
-		channel->remMode(cli, cmd[2]);
+		channel->remMode(cli, cmd[2].substr(1));
 		
 }	

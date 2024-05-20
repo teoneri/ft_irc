@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/17 16:26:32 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/20 18:19:56 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void Server::ServerInit(int port, std::string pass)
 
 void Server::AcceptNewClient()
 {
-	Client cli = Client();
+	Client cli;
 	struct sockaddr_in cliadd;
 	struct pollfd NewPoll;
 	socklen_t len = sizeof(cliadd);
@@ -212,10 +212,12 @@ void Server::parseCommand(int fd, std::vector<std::string> cmd)
 		NICK(fd, cmd);
 	else if((cmd[0] == "USER" || cmd[0] == "user"))
 		USER(fd, cmd);
-	if(getClient(fd)->getRegistered() == true)
+	else if(getClient(fd)->getRegistered() == true)
 	{
 		if((cmd[0] == "JOIN" || cmd[0] == "join"))
 			JOIN(fd, cmd);
+		if((cmd[0] == "MODE" || cmd[0] == "mode"))
+			MODE(fd, cmd);
 	}
 	else
 		ERR_NOTREGISTERED(getClient(fd));
@@ -244,11 +246,6 @@ void Server::NICK(int fd, std::vector<std::string> cmd)
 		ERR_NONICKNAMEGIVEN(cli);
 		return;
 	}
-	else if(!cli->getLogged())
-	{
-		ERR_NOTREGISTERED(cli);
-		return ;
-	}	
 	else if(cmd[1].find_first_of('#') == 0 || cmd[1].find_first_of(':') == 0 || cmd.size() < 2)
 	{
 		ERR_ERRONEUSNICKNAME(cli, cmd[1]);

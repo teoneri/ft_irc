@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/17 17:43:14 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/20 18:23:49 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 Channel::Channel() 
 {
+	_name = "";
+	_password = "";
+	_topic = "";
 	client_cap = -1;
+	inv_only = false;
+	adm_topic = false;
 }
 
 Channel::~Channel()
@@ -40,6 +45,8 @@ std::string Channel::getTopic()
 Client *Channel::getClient(int fd)
 {
 	std::vector<Client>::iterator it;
+	if(clients.empty())
+		return NULL;
 	for(it= clients.begin(); it != clients.end(); it++)
 	{
 		if(it->getFd() == fd)
@@ -57,6 +64,23 @@ Client *Channel::getAdmins(int fd)
 			return &(*it);
 	}
 	return NULL;
+}
+
+Client *Channel::getClientInChannel(int fd)
+{	
+	std::vector<Client>::iterator it;
+	for(it = admins.begin(); it != admins.end(); it++)
+	{
+		if(it->getFd() == fd)
+			return &(*it);
+	}
+	for(it= clients.begin(); it != clients.end(); it++)
+	{
+		if(it->getFd() == fd)
+			return &(*it);
+	}
+	return NULL;
+	
 }
 
 Client *Channel::getInvited(int fd)
@@ -100,14 +124,6 @@ void Channel::addInvited(Client *client)
     invited.push_back(*client);
 }
 
-std::string Channel::getTopic()
-{
-	return _topic;
-}
-std::string Channel::getPassword()
-{
-	return _password
-}
 
 bool Channel::getInvonly()
 {
@@ -121,12 +137,12 @@ void Channel::setInvonly(bool inv)
 
 bool Channel::getAdmtopic()
 {
-	return adm_topic
+	return adm_topic;
 }
 
 void Channel::setAdmtopic(bool adm)
 {
-	adm_topic = amd;
+	adm_topic = adm;
 }
 
 int Channel::getClientcap()
@@ -163,3 +179,12 @@ void Channel::addModes(std::string mode)
 	modes.push_back(mode);
 }
 
+void Channel::remAdmins(Client *client)
+{
+	std::vector<Client>::iterator it;
+	for(it = admins.begin(); it != admins.end(); it++)
+	{
+		if(it->getFd() == client->getFd())
+			admins.erase(it);
+	}
+}

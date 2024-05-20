@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/17 16:23:23 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/20 18:19:02 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 #include "Error.hpp"
 #include "Utils.hpp"
 #include "Channel.hpp"
+
+class Client;
+class Channel;
 
 class Server
 {
