@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/20 18:19:02 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/21 17:29:44 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,5 @@ class Server
 		void USER(int fd, std::vector<std::string> cmd);
 		void JOIN(int fd, std::vector<std::string> cmd);
 		void MODE(int fd, std::vector<std::string> cmd);
+		void KICK(int fd, std::vector<std::string> cmd);
 };

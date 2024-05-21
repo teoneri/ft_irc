@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:45:39 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/20 18:22:32 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/21 18:08:44 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ class Channel
 		Client *getAdmins(int fd);
 		Client *getInvited(int fd);
 		Client *getClientInChannel(int fd);
+		Client *getAdminbyName(std::string adminName);
+		Client *getClientbyName(std::string clientName);
 		bool getInvonly();
 		bool getAdmtopic();
 		int getClientcap();
@@ -61,8 +63,9 @@ class Channel
 		void sendToChannel(std::string msg);
 		std::string displayMode();
 		size_t countClients();
-		void remAdmins(Client *client);
+		void remAdmins(int fd);
+		void remClients(int fd);
 		void addMode(Client *client, std::vector<std::string> cmd, std::string mode);
-		void remMode(Client *client, std::string cmd);
-
+		void remMode(Client *client, std::vector<std::string> cmd,  std::string mode);
+		void parseKickCommand(Client *client, std::vector<std::string> cmd);
 };

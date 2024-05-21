@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   JOIN.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/20 17:46:05 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/21 18:55:09 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "../Server.hpp"
 
 
 void Server::channelNotFound(Client *client, std::string name)
@@ -28,14 +28,14 @@ void Server::channelNotFound(Client *client, std::string name)
 
 void Server::channelFound(Client *client, Channel *channel, std::vector<std::string> cmd, int fd)
 {
-	if(channel->getClient(fd) == client)
+	if(channel->getClient(fd))
 	{	
 		ERR_ALREADYJOIN(client, cmd[1]);
 		return;
 	}
-	if(cmd.size() > 2)
+	if(!channel->getPassword().empty())
 	{
-		if(!channel->getPassword().empty() && cmd[2] != channel->getPassword())
+		if(cmd.size() < 3 || cmd[2] != channel->getPassword())
 		{
 			ERR_BADCHANNELKEY(client, cmd[1]);
 			return;
@@ -43,7 +43,7 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
 	}
 	if(channel->getInvonly() == true)
 	{
-		if(channel->getInvited(fd) == client)
+		if(channel->getInvited(fd)->getNick() == client->getNick())
 		{
 			ERR_INVITEONLYCHAN(client, cmd[1]);
 			return;

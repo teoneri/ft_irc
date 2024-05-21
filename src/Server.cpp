@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/20 18:19:56 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/21 18:51:22 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,8 @@ void Server::parseCommand(int fd, std::vector<std::string> cmd)
 			JOIN(fd, cmd);
 		if((cmd[0] == "MODE" || cmd[0] == "mode"))
 			MODE(fd, cmd);
+		if((cmd[0] == "KICK" || cmd[0] == "kick"))
+			KICK(fd, cmd);
 	}
 	else
 		ERR_NOTREGISTERED(getClient(fd));
@@ -241,7 +243,12 @@ void Server::NICK(int fd, std::vector<std::string> cmd)
 {
 	Client *cli = getClient(fd);
 	
-	if(cmd.size() == 1)
+	if(!cli->getLogged())
+	{
+		ERR_NOTREGISTERED(cli);
+		return;
+	}
+	else if(cmd.size() == 1)
 	{
 		ERR_NONICKNAMEGIVEN(cli);
 		return;
@@ -272,7 +279,10 @@ void Server::USER(int fd, std::vector<std::string> cmd)
 {
 	Client *cli = getClient(fd);
 	std::string name;
-	if(cmd.size() < 5)
+
+	if(!cli->getLogged())
+		ERR_NOTREGISTERED(cli);
+	else if(cmd.size() < 5)
 		ERR_NEEDMOREPARAMS(cli, "USER");
 	else if(!cli->getUser().empty())
 		ERR_ALREADYREGISTERED(cli);

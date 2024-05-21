@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/20 18:23:49 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/21 18:09:06 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,12 +179,53 @@ void Channel::addModes(std::string mode)
 	modes.push_back(mode);
 }
 
-void Channel::remAdmins(Client *client)
+void Channel::remAdmins(int fd)
+{
+	std::vector<Client>::iterator it;
+
+	for(it = admins.begin(); it != admins.end(); it++)
+	{
+		if(it->getFd() == fd)
+		{	
+			admins.erase(it);
+			return ;
+		}
+	}
+}
+
+void Channel::remClients(int fd)
+{
+	std::vector<Client>::iterator it;
+
+	for(it = clients.begin(); it != clients.end(); it++)
+	{
+		if(it->getFd() == fd)
+		{	
+			clients.erase(it);
+			return ;
+		}
+	}
+}
+
+Client *Channel::getAdminbyName(std::string adminName)
 {
 	std::vector<Client>::iterator it;
 	for(it = admins.begin(); it != admins.end(); it++)
 	{
-		if(it->getFd() == client->getFd())
-			admins.erase(it);
+		if(it->getNick() == adminName)
+			return &(*it);
 	}
+	return NULL;
+}
+
+
+Client *Channel::getClientbyName(std::string clientName)
+{
+	std::vector<Client>::iterator it;
+	for(it = clients.begin(); it != clients.end(); it++)
+	{
+		if(it->getNick() == clientName)
+			return &(*it);
+	}
+	return NULL;
 }

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   MODE.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 16:18:35 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/20 18:41:21 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/21 18:55:25 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
-#include "Channel.hpp"
+#include "../Server.hpp"
+#include "../Channel.hpp"
 
 bool isAllNumbers(const std::string& str)
 {
@@ -52,32 +52,49 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 		}
 		case 'k':
 		{
-			if(arg + 1 < cmd.size())
+			if(cmd.size() <= 3)
 			{
 				ERR_INVALIDMODEPARAM(client, cmd[1], "k");
 				return ;
 			}
 			else if(_password.empty())
+			{	
 				_password = cmd[arg];
+				modes.push_back("k");
+			}
 			arg++;
 			break;
 		}
 		case 'o':
 		{
-			if(client != getAdmins(client->getFd()))
-				addAdmins(client);
+			if(cmd.size() <= 3 )
+			{
+				ERR_INVALIDMODEPARAM(client, cmd[1], "o");
+				return ;
+			}
+			if(!getAdminbyName(cmd[arg]))
+			{	
+				Client *cli = getClientbyName(cmd[arg]);
+				if(cli)
+					admins.push_back(*cli);
+			}
+			arg++;
 			break;
 		}
 		case 'l':
 		{
-			if(arg + 1 < cmd.size() && !isAllNumbers(cmd[arg]))
+			if(cmd.size() <= 3 && !isAllNumbers(cmd[arg]))
 			{
 				ERR_INVALIDMODEPARAM(client, cmd[1], "l");
 				return ;
 			}
 			else if(client_cap < 0)
+			{	
 				client_cap = std::atoi(cmd[arg].c_str());
+				modes.push_back("l");
+			}
 			arg++;
+			break;
 		}
 		default:
 		{
@@ -89,10 +106,10 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 	
 }
 
-void Channel::remMode(Client *client, std::string mode)
+void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string mode)
 {
 	std::vector<std::string>::iterator it;
-
+	size_t arg = 3;
 	for(int i = 0; mode[i]; i++)
 	{
 		switch (mode[i])
@@ -129,13 +146,18 @@ void Channel::remMode(Client *client, std::string mode)
 		}
 		case 'o':
 		{
-			if(client == getAdmins(client->getFd()))
+			if(cmd.size() <= 3 )
 			{
-		        it = std::find(modes.begin(), modes.end(), "o");
-				remAdmins(client);
-				modes.erase(it);
-
+				ERR_INVALIDMODEPARAM(client, cmd[1], "o");
+				return ;
 			}
+			if(getAdminbyName(cmd[arg]))
+			{	
+				Client *cli = getAdminbyName(cmd[arg]);
+				if(cli)
+					remAdmins(cli->getFd());
+			}
+			arg++;
 			break;
 		}
 		case 'l':
@@ -193,6 +215,6 @@ void Server::MODE(int fd, std::vector<std::string> cmd)
 	if(cmd[2][0] == '+')
 		channel->addMode(cli, cmd, cmd[2].substr(1));
 	else if(cmd[2][0] == '-')
-		channel->remMode(cli, cmd[2].substr(1));
+		channel->remMode(cli, cmd,  cmd[2].substr(1));
 		
 }	
