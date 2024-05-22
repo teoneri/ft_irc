@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Error.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:28:37 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 18:22:47 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 17:12:13 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void ERR_INVALIDMODEPARAM(Client *client, std::string channel, std::string param
 void ERR_UNKNOWNMODE(Client *client){std::string str = std::string(RED) + "ERR_UNKNOWNMODE (472) " + "<" + client->getNick() + "> " + " :Unkwown mode char\n" + WHITE; sendMsg(client, str);}
 void ERR_USERNOTINCHANNEL(Client *client, std::string nick, std::string channel){std::string str = std::string(RED) + "ERR_USERNOTINCHANNEL (441) " + "<" + client->getNick() + "> " + nick + " " + channel + " :They aren't on that channel\n" + WHITE; sendMsg(client, str);}
 void ERR_NOTONCHANNEL(Client *client, std::string channel){std::string str = std::string(RED) + "ERR_USERNOTINCHANNEL (441) " + "<" + client->getNick() + "> " + channel + " :You're not on that channel\n" + WHITE; sendMsg(client, str);}
+void ERR_USERONCHANNEL(Client *client, std::string nick, std::string channel){std::string str = std::string(RED) + "ERR_USERONCHANNEL (443) " + "<" + client->getNick() + "> " + nick + " " + channel + " :is already on channel\n" + WHITE; sendMsg(client, str);}
+
 //REPLIES// 
 
 void RPL_WELCOME(Client *client){std::string str = "<" + client->getNick() + "> Welcome to the IRC server!\n"; sendMsg(client, str);}
@@ -47,3 +49,4 @@ void RPL_CHANNELMODEIS(Client *client, std::string channel, std::string modestri
 // CHANNEL ERRORS // 
 std::string RPL_JOINCHANNEL(Client *client, std::string channelname){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " JOIN " + channelname + "\n";}
 std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string kicked, std::string reason){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " KICK " + channelname + " " + kicked +  ":" + reason +"\n";}
+std::string RPL_INVITING(Client *client, std::string invited, std::string channel){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " INVITE " + invited + " " + channel + "\n";}

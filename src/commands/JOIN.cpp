@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JOIN.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 18:55:09 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 16:52:21 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
 	}
 	if(channel->getInvonly() == true)
 	{
-		if(channel->getInvited(fd)->getNick() == client->getNick())
+		if(!channel->getInvited(fd))
 		{
 			ERR_INVITEONLYCHAN(client, cmd[1]);
 			return;

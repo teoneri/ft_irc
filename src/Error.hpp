@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 18:23:51 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 16:34:40 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void sendMsg(Client *client, std::string msg);
 // CHANNEL ERROR //
 std::string RPL_JOINCHANNEL(Client *client, std::string channelname);
 std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string kicked, std::string reason);
+std::string RPL_INVITING(Client *client, std::string invited, std::string channel);
 
 
 // ERRORS //
@@ -42,6 +43,7 @@ void ERR_INVALIDMODEPARAM(Client *client, std::string channel, std::string param
 void ERR_UNKNOWNMODE(Client *client);
 void ERR_USERNOTINCHANNEL(Client *client, std::string nick, std::string channel);
 void ERR_NOTONCHANNEL(Client *client, std::string channel);
+void ERR_USERONCHANNEL(Client *client, std::string nick, std::string channel);
 // RESPONSES //
 
 void RPL_WELCOME(Client *client);

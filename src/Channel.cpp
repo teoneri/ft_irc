@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 18:09:06 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 17:01:08 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ Client *Channel::getClientInChannel(int fd)
 Client *Channel::getInvited(int fd)
 {
 	std::vector<Client>::iterator it;
-	for(it = admins.begin(); it != invited.end(); it++)
+	for(it = invited.begin(); it != invited.end(); it++)
 	{
 		if(it->getFd() == fd)
 			return &(*it);
@@ -202,6 +202,20 @@ void Channel::remClients(int fd)
 		if(it->getFd() == fd)
 		{	
 			clients.erase(it);
+			return ;
+		}
+	}
+}
+
+void Channel::remInvited(int fd)
+{
+	std::vector<Client>::iterator it;
+
+	for(it = invited.begin(); it != invited.end(); it++)
+	{
+		if(it->getFd() == fd)
+		{	
+			invited.erase(it);
 			return ;
 		}
 	}

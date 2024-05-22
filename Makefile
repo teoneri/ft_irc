@@ -24,6 +24,7 @@ SRCS        :=      src/Server.cpp \
 						  src/commands/JOIN.cpp \
 						  src/commands/MODE.cpp \
 						  src/commands/KICK.cpp \
+						  src/commands/INVITE.cpp \
                           
 OBJS        := ${SRCS:.cpp=.o}
 
@@ -76,6 +77,7 @@ SRCS        :=      src/Server.cpp \
 						  src/commands/JOIN.cpp \
 						  src/commands/MODE.cpp \
 						  src/commands/KICK.cpp \
+						  src/commands/INVITE.cpp \
                         
 OBJS        := ${SRCS:.cpp=.o}
 

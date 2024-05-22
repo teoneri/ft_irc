@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:45:39 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 18:08:44 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 16:45:11 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ class Channel
 		size_t countClients();
 		void remAdmins(int fd);
 		void remClients(int fd);
+		void remInvited(int fd);
 		void addMode(Client *client, std::vector<std::string> cmd, std::string mode);
 		void remMode(Client *client, std::vector<std::string> cmd,  std::string mode);
 		void parseKickCommand(Client *client, std::vector<std::string> cmd);
+
 };

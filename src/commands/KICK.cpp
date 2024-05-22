@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   KICK.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:29:06 by teo               #+#    #+#             */
-/*   Updated: 2024/05/21 18:55:16 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 16:05:45 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void Server::KICK(int fd, std::vector<std::string> cmd)
     Channel *channel = getChannel(cmd[1]);
     if(cmd.size() < 3)
 	{
-		ERR_NEEDMOREPARAMS(cli, "MODE");
+		ERR_NEEDMOREPARAMS(cli, "KICK");
 		return;
 	}
 	if(!channel)

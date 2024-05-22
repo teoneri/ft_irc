@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 18:51:22 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 17:38:14 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,13 @@ void Server::removeClient(int fd)
 			return;
 		}
 	}
+	std::vector<Channel>::iterator it;
+	for(it = channels.begin(); it != channels.end(); it++)
+	{
+		it->remAdmins(fd);
+		it->remClients(fd);
+		it->remInvited(fd);
+	}
 }
 
 Channel *Server::getChannel(std::string channelname)
@@ -220,6 +227,8 @@ void Server::parseCommand(int fd, std::vector<std::string> cmd)
 			MODE(fd, cmd);
 		if((cmd[0] == "KICK" || cmd[0] == "kick"))
 			KICK(fd, cmd);
+		if((cmd[0] == "INVITE" || cmd[0] == "invite"))
+			INVITE(fd, cmd);
 	}
 	else
 		ERR_NOTREGISTERED(getClient(fd));
@@ -305,3 +314,13 @@ void Server::USER(int fd, std::vector<std::string> cmd)
 	}
 }
 
+Client *Server::getClientbyName(std::string name)
+{
+	std::vector<Client>::iterator it;
+	for(it = clients.begin(); it != clients.end(); it++)
+	{
+		if(it->getNick() == name)
+			return &(*it);
+	}
+	return NULL;
+}

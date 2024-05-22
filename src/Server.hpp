@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 17:29:44 by teo              ###   ########.fr       */
+/*   Updated: 2024/05/22 16:46:51 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,20 @@ class Server
 		void CloseFds();
 		void removeClient(int fd);
 		Client *getClient(int fd);
+		Client *getClientbyName(std::string name);
 		Channel *getChannel(std::string channelname);
 		std::string truncBuffEnd(std::string buff);
 		std::vector<std::string> splitBuffCommand(std::string buff);
 		void parseCommand(int fd, std::vector<std::string> cmd);
 		void channelFound(Client *client, Channel *channel, std::vector<std::string> cmd, int fd);
 		void channelNotFound(Client *client, std::string name);
+		void parseInviteCommand(Client *client, std::vector<std::string> cmd, Channel *channel);
 		void PASS(int fd, std::vector<std::string> cmd);
 		void NICK(int fd, std::vector<std::string> cmd);
 		void USER(int fd, std::vector<std::string> cmd);
 		void JOIN(int fd, std::vector<std::string> cmd);
 		void MODE(int fd, std::vector<std::string> cmd);
 		void KICK(int fd, std::vector<std::string> cmd);
+		void INVITE(int fd, std::vector<std::string> cmd);
+
 };
