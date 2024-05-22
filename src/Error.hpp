@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 16:34:40 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/22 18:56:04 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void sendMsg(Client *client, std::string msg);
 std::string RPL_JOINCHANNEL(Client *client, std::string channelname);
 std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string kicked, std::string reason);
 std::string RPL_INVITING(Client *client, std::string invited, std::string channel);
-
+std::string RPL_PART(Client *client, std::string channel, std::string reason);
+std::string RPL_QUIT(Client *client, std::string reason);
 
 // ERRORS //
 void ERR_ALREADYREGISTERED(Client *client);
@@ -48,3 +49,5 @@ void ERR_USERONCHANNEL(Client *client, std::string nick, std::string channel);
 
 void RPL_WELCOME(Client *client);
 void RPL_CHANNELMODEIS(Client *client, std::string channel, std::string modestring);
+void RPL_TOPIC(Client *client, std::string channel, std::string topic);
+

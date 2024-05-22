@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:28:37 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 17:12:13 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/22 18:55:53 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ void ERR_USERONCHANNEL(Client *client, std::string nick, std::string channel){st
 
 void RPL_WELCOME(Client *client){std::string str = "<" + client->getNick() + "> Welcome to the IRC server!\n"; sendMsg(client, str);}
 void RPL_CHANNELMODEIS(Client *client, std::string channel, std::string modestring){std::string str = "RPL_CHANNELMODEIS (324) <" + client->getNick() + "> " + channel + " " + modestring + "\n"; sendMsg(client, str);}
-
+void RPL_TOPIC(Client *client, std::string channel, std::string topic){std::string str = "RPL_TOPIC (332) <" + client->getNick() + "> " + channel + " :" + topic + "\n"; sendMsg(client, str);}
 // CHANNEL ERRORS // 
 std::string RPL_JOINCHANNEL(Client *client, std::string channelname){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " JOIN " + channelname + "\n";}
 std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string kicked, std::string reason){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " KICK " + channelname + " " + kicked +  ":" + reason +"\n";}
 std::string RPL_INVITING(Client *client, std::string invited, std::string channel){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " INVITE " + invited + " " + channel + "\n";}
+std::string RPL_PART(Client *client, std::string channel, std::string reason){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " PART " + channel + " :" + reason + "\n";}
+std::string RPL_QUIT(Client *client, std::string reason){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " QUIT :" + reason + "\n";}

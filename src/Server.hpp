@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 16:46:51 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/22 18:52:47 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,8 @@ class Server
 		void MODE(int fd, std::vector<std::string> cmd);
 		void KICK(int fd, std::vector<std::string> cmd);
 		void INVITE(int fd, std::vector<std::string> cmd);
+		void TOPIC(int fd, std::vector<std::string> cmd);
+		void PART(int fd, std::vector<std::string> cmd);
+		void QUIT(int fd, std::vector<std::string> cmd);
 
 };

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:45:39 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 16:45:11 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/22 18:31:50 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,7 @@ class Channel
 		void addMode(Client *client, std::vector<std::string> cmd, std::string mode);
 		void remMode(Client *client, std::vector<std::string> cmd,  std::string mode);
 		void parseKickCommand(Client *client, std::vector<std::string> cmd);
+		void parseTopicCommand(Client *client, std::vector<std::string> cmd);
+		void parsePartCommand(Client *client, std::vector<std::string> cmd);
 
 };

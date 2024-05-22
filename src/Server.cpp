@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 17:38:14 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/22 18:51:03 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,12 @@ void Server::parseCommand(int fd, std::vector<std::string> cmd)
 			KICK(fd, cmd);
 		if((cmd[0] == "INVITE" || cmd[0] == "invite"))
 			INVITE(fd, cmd);
+		if((cmd[0] == "TOPIC" || cmd[0] == "topic"))
+			TOPIC(fd, cmd);		
+		if((cmd[0] == "PART" || cmd[0] == "part"))
+			PART(fd, cmd);
+		if((cmd[0] == "QUIT" || cmd[0] == "quit"))
+			QUIT(fd, cmd);
 	}
 	else
 		ERR_NOTREGISTERED(getClient(fd));
