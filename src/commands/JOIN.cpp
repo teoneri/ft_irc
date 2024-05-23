@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:09:57 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 15:09:06 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
 			return;
 		}
 	}
-	if(channel->getClientcap() >= 0 && channel->countClients() > 10)
+	if(channel->getClientcap() > 0 && channel->countClients() >= (size_t)channel->getClientcap())
 	{
 		sendMsg(client, "Client cap exceeded.\n");
 		return;

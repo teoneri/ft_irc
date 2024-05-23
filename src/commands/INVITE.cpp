@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:51:38 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 17:10:24 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 15:00:46 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void Server::parseInviteCommand(Client *client, std::vector<std::string> cmd, Ch
 	std::string msg;
 	if(!inv)
 		return;
-	if(channel->getInvonly()== true && channel->getAdmins(client->getFd())->getNick() != client->getNick())
+	if(channel->getInvonly() == true && channel->getAdmins(client->getFd())->getNick() != client->getNick())
 	{
 		ERR_CHANOPRIVSNEEDED(client, cmd[2]);
 		return;

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:52:47 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 18:05:29 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ class Server
 	private:
 		int _port;
 		int _serverSocket;
-		std::string _password;
 		static bool _signal;
+		struct sockaddr_in add;
+		std::vector<struct pollfd> fds;
+		struct pollfd NewPoll;
+		std::string _password;
 		std::vector<Client> clients;
 		std::vector<Channel> channels;
-		std::vector<struct pollfd> fds;
 		std::vector<std::string> _cmd;
-		struct sockaddr_in add;
-		struct pollfd NewPoll;
 	public:
 		Server();
 		void ServerInit(int port, std::string pass);
@@ -63,6 +63,7 @@ class Server
 		void channelFound(Client *client, Channel *channel, std::vector<std::string> cmd, int fd);
 		void channelNotFound(Client *client, std::string name);
 		void parseInviteCommand(Client *client, std::vector<std::string> cmd, Channel *channel);
+		void parseMsgCommand(Client *client, std::vector<std::string> cmd, Channel *channel, Client *recipient);
 		void PASS(int fd, std::vector<std::string> cmd);
 		void NICK(int fd, std::vector<std::string> cmd);
 		void USER(int fd, std::vector<std::string> cmd);
@@ -73,5 +74,6 @@ class Server
 		void TOPIC(int fd, std::vector<std::string> cmd);
 		void PART(int fd, std::vector<std::string> cmd);
 		void QUIT(int fd, std::vector<std::string> cmd);
+		void PRIVMSG(int fd, std::vector<std::string> cmd);
 
 };

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:29:06 by teo               #+#    #+#             */
-/*   Updated: 2024/05/22 16:05:45 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 14:59:46 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void Channel::parseKickCommand(Client *client, std::vector<std::string> cmd)
     sendToChannel(msg);
     remAdmins(kicked->getFd());
     remClients(kicked->getFd());
-
+	remInvited(kicked->getFd());
 }
 
 

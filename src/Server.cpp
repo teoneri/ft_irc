@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:51:03 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 18:00:18 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,20 +129,27 @@ Client *Server::getClient(int fd)
 
 void Server::removeClient(int fd)
 {
-	for(size_t i = 0; i < clients.size(); i++)
-	{
-		if(fd == clients[i].getFd())
-		{
-			clients.erase(clients.begin() + i);
-			return;
-		}
-	}
 	std::vector<Channel>::iterator it;
 	for(it = channels.begin(); it != channels.end(); it++)
 	{
 		it->remAdmins(fd);
 		it->remClients(fd);
 		it->remInvited(fd);
+	}
+	for(size_t i = 0; i < clients.size(); i++)
+	{
+		if(fd == clients[i].getFd())
+		{
+			clients.erase(clients.begin() + i);
+		}
+	}
+	for(std::vector<struct pollfd>::iterator it = fds.begin(); it != fds.end(); it++)
+	{
+		if(it->fd == fd)
+		{	
+			fds.erase(it);
+			break;
+		}
 	}
 }
 
@@ -199,6 +206,7 @@ void Server::ReceiveNewData(int fd)
 		std::cout << RED << "Client " << client->getNick() << " <" << client->getFd() << "> " << " disconnected\n" << WHITE;
 		removeClient(fd);
 		close(fd);
+		
 	}
 	else
 	{
@@ -235,6 +243,8 @@ void Server::parseCommand(int fd, std::vector<std::string> cmd)
 			PART(fd, cmd);
 		if((cmd[0] == "QUIT" || cmd[0] == "quit"))
 			QUIT(fd, cmd);
+		if((cmd[0] == "PRIVMSG" || cmd[0] == "privmsg"))
+			PRIVMSG(fd, cmd);	
 	}
 	else
 		ERR_NOTREGISTERED(getClient(fd));

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:56:04 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 17:54:06 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string
 std::string RPL_INVITING(Client *client, std::string invited, std::string channel);
 std::string RPL_PART(Client *client, std::string channel, std::string reason);
 std::string RPL_QUIT(Client *client, std::string reason);
-
+std::string RPL_MSG(Client *client, std::string recipient, std::string msg);
 // ERRORS //
 void ERR_ALREADYREGISTERED(Client *client);
 void ERR_NEEDMOREPARAMS(Client *client, std::string cmd);
@@ -45,6 +45,9 @@ void ERR_UNKNOWNMODE(Client *client);
 void ERR_USERNOTINCHANNEL(Client *client, std::string nick, std::string channel);
 void ERR_NOTONCHANNEL(Client *client, std::string channel);
 void ERR_USERONCHANNEL(Client *client, std::string nick, std::string channel);
+void ERR_NORECIPIENT(Client *client);  
+void ERR_NOSUCHNICK(Client *client, std::string nick);
+void ERR_NOTEXTOSEND(Client *client);
 // RESPONSES //
 
 void RPL_WELCOME(Client *client);

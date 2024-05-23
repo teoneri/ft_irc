@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:28:37 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:55:53 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 17:53:45 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ void ERR_UNKNOWNMODE(Client *client){std::string str = std::string(RED) + "ERR_U
 void ERR_USERNOTINCHANNEL(Client *client, std::string nick, std::string channel){std::string str = std::string(RED) + "ERR_USERNOTINCHANNEL (441) " + "<" + client->getNick() + "> " + nick + " " + channel + " :They aren't on that channel\n" + WHITE; sendMsg(client, str);}
 void ERR_NOTONCHANNEL(Client *client, std::string channel){std::string str = std::string(RED) + "ERR_USERNOTINCHANNEL (441) " + "<" + client->getNick() + "> " + channel + " :You're not on that channel\n" + WHITE; sendMsg(client, str);}
 void ERR_USERONCHANNEL(Client *client, std::string nick, std::string channel){std::string str = std::string(RED) + "ERR_USERONCHANNEL (443) " + "<" + client->getNick() + "> " + nick + " " + channel + " :is already on channel\n" + WHITE; sendMsg(client, str);}
+void ERR_NORECIPIENT(Client *client){std::string str = std::string(RED) + "ERR_NORECIPIENT (411) " + "<" + client->getNick() + "> " + ": No recipient given\n" + WHITE; sendMsg(client, str);}
+void ERR_NOSUCHNICK(Client *client, std::string nick){std::string str = std::string(RED) + "ERR_NOSUCHNICK (401) " + "<" + client->getNick() + "> " + nick + ": No such nick/channel\n" + WHITE; sendMsg(client, str);}
+void ERR_NOTEXTOSEND(Client *client){std::string str = std::string(RED) + "ERR_NOSUCHNICK (401) " + "<" + client->getNick() + "> " + ": No text to send\n" + WHITE; sendMsg(client, str);}
 
 //REPLIES// 
 
@@ -52,3 +55,4 @@ std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string
 std::string RPL_INVITING(Client *client, std::string invited, std::string channel){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " INVITE " + invited + " " + channel + "\n";}
 std::string RPL_PART(Client *client, std::string channel, std::string reason){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " PART " + channel + " :" + reason + "\n";}
 std::string RPL_QUIT(Client *client, std::string reason){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " QUIT :" + reason + "\n";}
+std::string RPL_MSG(Client *client, std::string recipient, std::string msg){return client->getNick() + ":" + client->getUser() + "@" + client->getIPaddr() + " PRIVMSG :" + recipient + " " + msg + "\n";}

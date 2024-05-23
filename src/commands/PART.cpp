@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:29:38 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:44:57 by mneri            ###   ########.fr       */
+/*   Updated: 2024/05/23 17:42:43 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void Server::PART(int fd, std::vector<std::string> cmd)
     Channel *channel = getChannel(cmd[1]);
     if(cmd.size() < 2)
 	{
-		ERR_NEEDMOREPARAMS(cli, "KICK");
+		ERR_NEEDMOREPARAMS(cli, "PART");
 		return;
 	}
 	if(!channel)

@@ -28,6 +28,8 @@ SRCS        :=      src/Server.cpp \
 						  src/commands/PART.cpp \
 						  src/commands/TOPIC.cpp \
 						  src/commands/QUIT.cpp \
+						  src/commands/PRIVMSG.cpp \
+
                           
 OBJS        := ${SRCS:.cpp=.o}
 
@@ -84,6 +86,7 @@ SRCS        :=      src/Server.cpp \
 						  src/commands/INVITE.cpp \
 						  src/commands/QUIT.cpp \
 						  src/commands/PART.cpp \
+						  src/commands/PRIVMSG.cpp \
                         
 OBJS        := ${SRCS:.cpp=.o}
 
