@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/23 18:00:18 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 17:04:42 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ Client *Server::getClient(int fd)
 	return NULL;
 }
 
+
 void Server::removeClient(int fd)
 {
 	std::vector<Channel>::iterator it;
@@ -165,18 +166,19 @@ Channel *Server::getChannel(std::string channelname)
 }
 
 
-std::string Server::truncBuffEnd(std::string buff)
+std::vector<std::string> Server::SplitRN(std::string buff)
 {
 	std::istringstream iss(buff);
 	std::string line;
+	std::vector<std::string> vec;
 	while(std::getline(iss, line))
 	{
 		size_t pos = line.find_first_of("\r\n");
 		if(pos != std::string::npos)
 			line = line.substr(0, pos);
-		break;
+		vec.push_back(line);
 	}
-	return line;
+	return vec;
 }
 
 std::vector<std::string> Server::splitBuffCommand(std::string buff)
@@ -196,8 +198,7 @@ std::vector<std::string> Server::splitBuffCommand(std::string buff)
 void Server::ReceiveNewData(int fd)
 {
 	char buff[1024];
-	std::string tmp;
-	std::vector<std::string> cmd;
+	std::vector<std::string> tmp;
 	memset(buff, 0, sizeof(buff));
 	Client *client = getClient(fd);
 	ssize_t bytes = recv(fd, buff, sizeof(buff) - 1, 0);
@@ -213,14 +214,17 @@ void Server::ReceiveNewData(int fd)
 		client->setBuff(buff);
 		if(client->getBuff().find_first_of("\r\n") == std::string::npos)
 			return;
-		tmp = truncBuffEnd(buff);
-		cmd = splitBuffCommand(tmp);
-		parseCommand(fd, cmd);
+		tmp = SplitRN(buff);
+		for(size_t i = 0; i < tmp.size(); i++)
+			parseCommand(fd, tmp[i]);
+		if(getClient(fd))
+			getClient(fd)->clearBuffer();
 	}
 }
 
-void Server::parseCommand(int fd, std::vector<std::string> cmd)
+void Server::parseCommand(int fd, std::string tmp)
 {
+	std::vector<std::string> cmd = splitBuffCommand(tmp);
 	if((cmd[0] == "PASS" || cmd[0] == "pass"))
 		PASS(fd, cmd);
 	else if((cmd[0] == "NICK" || cmd[0] == "nick"))
@@ -246,7 +250,7 @@ void Server::parseCommand(int fd, std::vector<std::string> cmd)
 		if((cmd[0] == "PRIVMSG" || cmd[0] == "privmsg"))
 			PRIVMSG(fd, cmd);	
 	}
-	else
+	else if(!getClient(fd)->getRegistered())
 		ERR_NOTREGISTERED(getClient(fd));
 }
 
@@ -259,7 +263,7 @@ void Server::PASS(int fd, std::vector<std::string> cmd)
 			ERR_ALREADYREGISTERED(cli);
 	else if(cmd[1] == _password)
 			cli->setLogged(true);
-	else
+	else if(cmd[1] != _password)
 		ERR_PASSWDMISMATCH(cli);
 }
 

@@ -6,13 +6,15 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:45:39 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:31:50 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 17:39:48 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <algorithm>
+#include <ctime>
+#include <sstream>
 #include "Client.hpp"
 #include "Error.hpp"
 
@@ -24,6 +26,7 @@ class Channel
 		std::string _name;
 		std::string _password;
 		std::string _topic;
+		std::string _creationTime;
 		std::vector<Client> clients;	
 		std::vector<Client> admins;
 		std::vector<Client> invited;
@@ -48,6 +51,8 @@ class Channel
 		bool getAdmtopic();
 		int getClientcap();
 		std::vector<std::string> getModes();
+		std::string getClientList();
+		std::string getCreationTime();
 		//setters
 		void setName(std::string name);
 		void setPassword(std::string password);
@@ -55,6 +60,7 @@ class Channel
 		void setInvonly(bool inv);
 		void setClientcap(int inv);
 		void setAdmtopic(bool adm);
+		void setCreationTime();
 		//misc
 		void addClient(Client *client);
 		void addAdmins(Client *client);

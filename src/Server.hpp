@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/23 18:05:29 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 17:04:56 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ class Server
 		Client *getClient(int fd);
 		Client *getClientbyName(std::string name);
 		Channel *getChannel(std::string channelname);
-		std::string truncBuffEnd(std::string buff);
+		std::vector<std::string> SplitRN(std::string buff);
 		std::vector<std::string> splitBuffCommand(std::string buff);
-		void parseCommand(int fd, std::vector<std::string> cmd);
+		void parseCommand(int fd, std::string tmp);
 		void channelFound(Client *client, Channel *channel, std::vector<std::string> cmd, int fd);
 		void channelNotFound(Client *client, std::string name);
 		void parseInviteCommand(Client *client, std::vector<std::string> cmd, Channel *channel);

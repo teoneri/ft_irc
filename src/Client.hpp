@@ -43,6 +43,7 @@ class Client
 		void setNicked(bool bool_);
 		void setUsered(bool bool_);
 		void setRegistered(bool bool_);
+		void clearBuffer();
 		std::string getBuff(){return _buff;}
 		std::string getNick();
 		std::string getUser();

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/23 15:09:06 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 17:44:20 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@ void Server::channelNotFound(Client *client, std::string name)
 	newChannel.setName(name);
 	newChannel.addAdmins(client);
 	newChannel.addClient(client);
+	newChannel.setCreationTime();
 	channels.push_back(newChannel);
-	Channel& chan = channels.back();
+	// Channel& chan = channels.back();
     std::string joinMessage = RPL_JOINCHANNEL(client, name);
-    chan.sendToChannel(joinMessage);
+    sendMsg(client, "Response:\n" + joinMessage);
+	sendMsg(client, RPL_NAMREPLY(client->getNick(), name, newChannel.getClientList()));
+	sendMsg(client, RPL_CREATIONTIME(client->getNick(), name, newChannel.getCreationTime()));
 	RPL_TOPIC(client, newChannel.getName(), newChannel.getTopic());
 }
 
@@ -56,7 +59,10 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
 		return;
 	}
 	channel->addClient(client);
-	channel->sendToChannel(RPL_JOINCHANNEL(client, cmd[1]));
+    std::string joinMessage = RPL_JOINCHANNEL(client, cmd[1]);
+    sendMsg(client, "Response:\n" + joinMessage);
+	sendMsg(client, RPL_NAMREPLY(client->getNick(), cmd[1], channel->getClientList()));
+	sendMsg(client, RPL_CREATIONTIME(client->getNick(), cmd[1], channel->getCreationTime()));
 	RPL_TOPIC(client, channel->getName(), channel->getTopic());
 }
 

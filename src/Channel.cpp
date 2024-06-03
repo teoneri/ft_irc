@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 17:01:08 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 17:39:29 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,25 @@ Client *Channel::getInvited(int fd)
 	return NULL;
 }
 
+std::string Channel::getClientList()
+{
+	std::string list;
+	for(size_t i = 0; i < admins.size(); i++){
+		list += "@" + admins[i].getNick();
+		if((i + 1) < admins.size())
+			list += " ";
+	}
+	if(clients.size())
+		list += " ";
+	for(size_t i = 0; i < clients.size(); i++){
+		list += clients[i].getNick();
+		if((i + 1) < clients.size())
+			list += " ";
+	}
+	return list;
+}
+
+
 void Channel::setName(std::string name)
 {
 	_name = name;
@@ -135,6 +154,19 @@ void Channel::setInvonly(bool inv)
 	inv_only = inv;
 }
 
+void Channel::setCreationTime()
+{
+	std::time_t _time = std::time(NULL);
+	std::ostringstream oss;
+	oss << _time;
+	this->_creationTime = std::string(oss.str());
+}
+
+std::string Channel::getCreationTime()
+{
+	return _creationTime;
+}
+
 bool Channel::getAdmtopic()
 {
 	return adm_topic;
@@ -157,6 +189,7 @@ void Channel::setClientcap(int cap)
 
 void Channel::sendToChannel(std::string msg)
 {
+	
 	std::vector<Client>::iterator it;
 	for(it = clients.begin(); it != clients.end(); it++)
 	{

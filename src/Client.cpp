@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:57:54 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/16 15:22:37 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 17:34:59 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 Client::Client() : logged(false) , nicked(false), usered(false) ,registered(false)
 {
-	_IPaddr.clear();
-	_username.clear();
-	_nickname = "*";
-	_buff.clear();
+	_IPaddr = "";
+	_username = "";
+	_nickname = "";
+	_buff = "";
+	_fd = -1;
 }
 
 Client::~Client(){}
@@ -56,6 +57,7 @@ void Client::setLogged(bool bool_)
 	logged = bool_;
 }
 
+
 bool Client::getLogged()
 {
 	return logged;
@@ -86,6 +88,10 @@ void Client::setNicked(bool bool_)
 	nicked = bool_;
 }
 
+void Client::clearBuffer()
+{
+	_buff.clear();
+}
 
 std::string Client::getNick()
 {
