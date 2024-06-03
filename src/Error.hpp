@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 17:42:21 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 17:53:55 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ std::string RPL_QUIT(Client *client, std::string reason);
 std::string RPL_MSG(Client *client, std::string recipient, std::string msg);
 std::string RPL_NAMREPLY(std::string nickname, std::string channel, std::string list);
 std::string RPL_CREATIONTIME(std::string nick, std::string channel, std::string creationtime);
+std::string RPL_ENDOFNAMES(std::string nick, std::string channel);
 // ERRORS //
 void ERR_ALREADYREGISTERED(Client *client);
 void ERR_NEEDMOREPARAMS(Client *client, std::string cmd);

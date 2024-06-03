@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:28:37 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 17:48:15 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/03 18:00:17 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,3 +59,4 @@ std::string RPL_QUIT(Client *client, std::string reason){return client->getNick(
 std::string RPL_MSG(Client *client, std::string recipient, std::string msg){return client->getNick() + "!" + client->getUser() + "@" + client->getIPaddr() + " PRIVMSG :" + recipient + " " + msg + "\r\n";}
 std::string RPL_NAMREPLY(std::string nick, std::string channel, std::string list){return ": 353 " + nick + " @ " + channel + " :" + list + "\r\n";}
 std::string RPL_CREATIONTIME(std::string nick, std::string channel, std::string creationtime){ return ": 329 " + nick + " " + channel + " " + creationtime + "\r\n";}
+std::string RPL_ENDOFNAMES(std::string nick, std::string channel){return ": 366 " + nick + " " + channel + " :END of /NAMES list" + "\r\n";}
