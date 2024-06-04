@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 17:04:42 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/04 16:09:50 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,20 +235,22 @@ void Server::parseCommand(int fd, std::string tmp)
 	{
 		if((cmd[0] == "JOIN" || cmd[0] == "join"))
 			JOIN(fd, cmd);
-		if((cmd[0] == "MODE" || cmd[0] == "mode"))
+		else if((cmd[0] == "MODE" || cmd[0] == "mode"))
 			MODE(fd, cmd);
-		if((cmd[0] == "KICK" || cmd[0] == "kick"))
+		else if((cmd[0] == "KICK" || cmd[0] == "kick"))
 			KICK(fd, cmd);
-		if((cmd[0] == "INVITE" || cmd[0] == "invite"))
+		else if((cmd[0] == "INVITE" || cmd[0] == "invite"))
 			INVITE(fd, cmd);
-		if((cmd[0] == "TOPIC" || cmd[0] == "topic"))
+		else if((cmd[0] == "TOPIC" || cmd[0] == "topic"))
 			TOPIC(fd, cmd);		
-		if((cmd[0] == "PART" || cmd[0] == "part"))
+		else if((cmd[0] == "PART" || cmd[0] == "part"))
 			PART(fd, cmd);
-		if((cmd[0] == "QUIT" || cmd[0] == "quit"))
+		else if((cmd[0] == "QUIT" || cmd[0] == "quit"))
 			QUIT(fd, cmd);
-		if((cmd[0] == "PRIVMSG" || cmd[0] == "privmsg"))
-			PRIVMSG(fd, cmd);	
+		else if((cmd[0] == "PRIVMSG" || cmd[0] == "privmsg"))
+			PRIVMSG(fd, cmd);
+		else if(cmd.size())
+			ERR_CMDNOTFOUND(getClient(fd), cmd[0]);
 	}
 	else if(!getClient(fd)->getRegistered())
 		ERR_NOTREGISTERED(getClient(fd));
@@ -295,9 +297,11 @@ void Server::NICK(int fd, std::vector<std::string> cmd)
 			return;
 		}
 	}
+	if(cli->getRegistered())
+		sendMsg(cli, RPL_NICKCHANGE(cli->getNick(), cmd[1]));
 	cli->setNick(cmd[1]);
 	cli->setNicked(true);
-	if(cli->getUsered())
+	if(cli->getUsered() && !cli->getRegistered())
 	{
 		cli->setRegistered(true);
 		RPL_WELCOME(cli);

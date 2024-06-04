@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 17:39:29 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/04 15:06:45 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,15 +97,18 @@ Client *Channel::getInvited(int fd)
 std::string Channel::getClientList()
 {
 	std::string list;
-	for(size_t i = 0; i < admins.size(); i++){
+	for(size_t i = 0; i < admins.size(); i++)
+	{
 		list += "@" + admins[i].getNick();
 		if((i + 1) < admins.size())
 			list += " ";
 	}
 	if(clients.size())
 		list += " ";
-	for(size_t i = 0; i < clients.size(); i++){
-		list += clients[i].getNick();
+	for(size_t i = 0; i < clients.size(); i++)
+	{
+		if(clients[i].getNick() != getAdminbyName(clients[i].getNick())->getNick())
+			list += clients[i].getNick();
 		if((i + 1) < clients.size())
 			list += " ";
 	}

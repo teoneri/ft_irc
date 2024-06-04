@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 18:03:23 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/04 18:00:47 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void Server::channelNotFound(Client *client, std::string name)
 	newChannel.setCreationTime();
 	channels.push_back(newChannel);
 	// Channel& chan = channels.back();
-    std::string joinMessage = RPL_JOINCHANNEL(client, name);
-    sendMsg(client, joinMessage);
-	sendMsg(client, RPL_NAMREPLY(client->getNick(), name, newChannel.getClientList()));
-	sendMsg(client, RPL_ENDOFNAMES(client->getNick(), name));
-	RPL_CHANNELMODEIS(client, name, newChannel.displayMode());
-	sendMsg(client, RPL_CREATIONTIME(client->getNick(), name, newChannel.getCreationTime()));
-	RPL_TOPIC(client, newChannel.getName(), newChannel.getTopic());
+    sendMsg(client,  RPL_JOINCHANNEL(client, name) + RPL_NAMREPLY(client->getNick(), newChannel.getName(), newChannel.getClientList()) +\
+	RPL_ENDOFNAMES(client->getNick(), name));
+	// sendMsg(client, RPL_NAMREPLY(client->getNick(), name, newChannel.getClientList()));
+	// sendMsg(client, RPL_ENDOFNAMES(client->getNick(), name));
+	// RPL_CHANNELMODEIS(client, name, newChannel.displayMode());
+	// sendMsg(client, RPL_CREATIONTIME(client->getNick(), name, newChannel.getCreationTime()));
+	// RPL_TOPIC(client, newChannel.getName(), newChannel.getTopic());
 }
 
 
@@ -62,7 +62,8 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
 	}
 	channel->addClient(client);
     std::string joinMessage = RPL_JOINCHANNEL(client, cmd[1]);
-    sendMsg(client,  joinMessage);
+    sendMsg(client,  joinMessage + RPL_NAMREPLY(client->getNick(), cmd[1], channel->getClientList()) +\
+	RPL_ENDOFNAMES(client->getNick(), cmd[1]));
 	sendMsg(client, RPL_NAMREPLY(client->getNick(), cmd[1], channel->getClientList()));
 	sendMsg(client, RPL_ENDOFNAMES(client->getNick(), cmd[1]));
 	RPL_CHANNELMODEIS(client, cmd[1], channel->displayMode());

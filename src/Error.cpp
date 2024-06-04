@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:28:37 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 18:00:17 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/04 18:16:32 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 void sendMsg(Client *client, std::string msg)
 {
-	send(client->getFd(), msg.c_str(), msg.size(), 0);
 	std::cout << msg;
+	send(client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
 
@@ -43,15 +43,16 @@ void ERR_USERONCHANNEL(Client *client, std::string nick, std::string channel){ s
 void ERR_NORECIPIENT(Client *client){ std::string str =  ": 411 " + client->getNick() + " " + ": No recipient given\r\n"; sendMsg(client, str);}
 void ERR_NOSUCHNICK(Client *client, std::string nick){ std::string str =  ": 401 " + client->getNick() + " " + nick + ": No such nick/channel\r\n"; sendMsg(client, str);}
 void ERR_NOTEXTOSEND(Client *client){ std::string str =  ": 412 " + client->getNick() + " " + ": No text to send\r\n"; sendMsg(client, str);}
+void ERR_CMDNOTFOUND(Client *client, std::string cmd){std::string str = ": 421 " + client->getNick() + " " + cmd + " :Unknown command\r\n";sendMsg(client, str);}
 
 //REPLIES// 
 
-void RPL_WELCOME(Client *client){std::string str = ": 001 " + client->getNick() + ": Welcome to the IRC server!\n"; sendMsg(client, str);}
+void RPL_WELCOME(Client *client){std::string str = ": 001 " + client->getNick() + ": Welcome to the IRC server!\r\n"; sendMsg(client, str);}
 void RPL_CHANNELMODEIS(Client *client, std::string channel, std::string modestring){std::string str = ": 324 " + client->getNick() + " " + channel + " " + modestring + "\r\n"; sendMsg(client, str);}
 void RPL_TOPIC(Client *client, std::string channel, std::string topic){std::string str = ": 332 " + client->getNick() + " " + channel + " : " + topic + "\r\n"; sendMsg(client, str);}
 
 // CHANNEL ERRORS // 
-std::string RPL_JOINCHANNEL(Client *client, std::string channelname){return client->getNick() + "!" + client->getUser() + "@" + client->getIPaddr() + " JOIN " + channelname + "\r\n";}
+std::string RPL_JOINCHANNEL(Client *client, std::string channelname){return ":" + client->getNick() + "!" + client->getUser() + "@" + client->getIPaddr() + " JOIN " + channelname + "\r\n";}
 std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string kicked, std::string reason){return client->getNick() + "!" + client->getUser() + "@" + client->getIPaddr() + " KICK " + channelname + " " + kicked +  ":" + reason +"\r\n";}
 std::string RPL_INVITING(Client *client, std::string invited, std::string channel){return client->getNick() + "!" + client->getUser() + "@" + client->getIPaddr() + " INVITE " + invited + " " + channel + "\r\n";}
 std::string RPL_PART(Client *client, std::string channel, std::string reason){return client->getNick() + "!" + client->getUser() + "@" + client->getIPaddr() + " PART " + channel + " :" + reason + "\r\n";}
@@ -60,3 +61,4 @@ std::string RPL_MSG(Client *client, std::string recipient, std::string msg){retu
 std::string RPL_NAMREPLY(std::string nick, std::string channel, std::string list){return ": 353 " + nick + " @ " + channel + " :" + list + "\r\n";}
 std::string RPL_CREATIONTIME(std::string nick, std::string channel, std::string creationtime){ return ": 329 " + nick + " " + channel + " " + creationtime + "\r\n";}
 std::string RPL_ENDOFNAMES(std::string nick, std::string channel){return ": 366 " + nick + " " + channel + " :END of /NAMES list" + "\r\n";}
+std::string RPL_NICKCHANGE(std::string oldnickname, std::string newnickname){return ":" + oldnickname + " NICK " + newnickname + "\r\n";}
