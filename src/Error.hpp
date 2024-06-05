@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/04 16:07:49 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:55:14 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ std::string RPL_NAMREPLY(std::string nickname, std::string channel, std::string 
 std::string RPL_CREATIONTIME(std::string nick, std::string channel, std::string creationtime);
 std::string RPL_ENDOFNAMES(std::string nick, std::string channel);
 std::string RPL_NICKCHANGE(std::string oldnickname, std::string newnickname);
+std::string	RPL_MODE(Client *client, std::string channel, std::string mode, std::string target);
 
 // ERRORS //
 void ERR_ALREADYREGISTERED(Client *client);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:59:03 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/04 15:06:45 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:43:26 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,11 +103,9 @@ std::string Channel::getClientList()
 		if((i + 1) < admins.size())
 			list += " ";
 	}
-	if(clients.size())
-		list += " ";
 	for(size_t i = 0; i < clients.size(); i++)
 	{
-		if(clients[i].getNick() != getAdminbyName(clients[i].getNick())->getNick())
+		if(!getAdminbyName(clients[i].getNick()))
 			list += clients[i].getNick();
 		if((i + 1) < clients.size())
 			list += " ";
@@ -190,13 +188,14 @@ void Channel::setClientcap(int cap)
 	client_cap = cap;
 }
 
-void Channel::sendToChannel(std::string msg)
+void Channel::sendToChannel(std::string msg, int fd)
 {
 	
 	std::vector<Client>::iterator it;
 	for(it = clients.begin(); it != clients.end(); it++)
 	{
-		sendMsg(&(*it), msg);
+		if(it->getFd() != fd)
+			sendMsg(&(*it), msg);
 	}
 }
 

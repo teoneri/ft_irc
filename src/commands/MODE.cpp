@@ -6,7 +6,7 @@
 /*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 16:18:35 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/21 18:55:25 by teo              ###   ########.fr       */
+/*   Updated: 2024/06/05 18:19:07 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ bool isAllNumbers(const std::string& str)
 void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string mode)
 {
 	size_t arg = 3;
+	std::string modsadded = "+";
 	for(int i = 0; mode[i]; i++)
 	{
 		switch (mode[i])
@@ -37,6 +38,7 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 			if(inv_only == false)
 			{
 				inv_only = true;
+				modsadded += "i";
 				modes.push_back("i");
 			}
 			break;
@@ -46,6 +48,7 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 			if(adm_topic == false)
 			{
 				adm_topic = true;
+				modsadded += "t";
 				modes.push_back("t");
 			}
 			break;
@@ -60,6 +63,7 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 			else if(_password.empty())
 			{	
 				_password = cmd[arg];
+				modsadded += "k";
 				modes.push_back("k");
 			}
 			arg++;
@@ -77,6 +81,8 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 				Client *cli = getClientbyName(cmd[arg]);
 				if(cli)
 					admins.push_back(*cli);
+				modsadded += "o";
+				
 			}
 			arg++;
 			break;
@@ -92,6 +98,8 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 			{	
 				client_cap = std::atoi(cmd[arg].c_str());
 				modes.push_back("l");
+				modsadded += "l";
+
 			}
 			arg++;
 			break;
@@ -103,7 +111,10 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 		}
 		}
 	}
-	
+		std::string target = "";
+		if(cmd.size() > 3)
+			target = " " + cmd[3];
+		sendMsg(client, RPL_MODE(client, cmd[1], modsadded, target));
 }
 
 void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string mode)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:45:39 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 17:39:48 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:43:52 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ class Channel
 		void addAdmins(Client *client);
 		void addInvited(Client *client);
 		void addModes(std::string mode);
-		void sendToChannel(std::string msg);
+		void sendToChannel(std::string msg, int fd);
 		std::string displayMode();
 		size_t countClients();
 		void remAdmins(int fd);

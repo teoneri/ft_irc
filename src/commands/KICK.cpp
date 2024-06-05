@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   KICK.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:29:06 by teo               #+#    #+#             */
-/*   Updated: 2024/05/23 14:59:46 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:45:36 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void Channel::parseKickCommand(Client *client, std::vector<std::string> cmd)
     for(size_t i = 3; i < cmd.size(); i++)
         reason += cmd[i] + " ";
     std::string msg = RPL_KICKCHANNEL(client, cmd[1], cmd[2], reason);
-    sendToChannel(msg);
+    sendToChannel(msg, client->getFd());
     remAdmins(kicked->getFd());
     remClients(kicked->getFd());
 	remInvited(kicked->getFd());

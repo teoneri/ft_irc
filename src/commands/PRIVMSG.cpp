@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:27:28 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/23 18:22:16 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:44:27 by teo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void Server::parseMsgCommand(Client *client, std::vector<std::string> cmd, Chann
 	else
 	{
 		finalmsg = RPL_MSG(client, channel->getName(), msg);
-		channel->sendToChannel(finalmsg);
+		channel->sendToChannel(finalmsg, client->getFd());
 	}
 }
 
