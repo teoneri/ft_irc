@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 17:48:41 by mneri             #+#    #+#             */
-/*   Updated: 2024/05/22 18:20:06 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/07 17:12:18 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,19 @@ void Channel::parseTopicCommand(Client *client, std::vector<std::string> cmd)
 {
 	if(cmd.size() == 2)
 	{
-		RPL_TOPIC(client, cmd[1], _topic);
+		sendMsg(client, RPL_TOPIC(client, cmd[1], _topic));
 		return;
 	}
 	else
 	{
-		if(cmd[2] == ":" && cmd.size() == 3)
-			_topic.clear();
-		else
-		{
-			std::string msg;
-			for(size_t arg = 2; arg < cmd.size(); arg++)
-				msg += cmd[arg] + " ";
-			setTopic(msg);
-		}
+		std::string msg;
+		for(size_t arg = 2; arg < cmd.size(); arg++)
+			msg += cmd[arg] + " ";
+		setTopic(msg);
+		sendMsg(client, RPL_SETTOPIC(client, cmd[1], msg));
+		sendToChannel(RPL_SETTOPIC(client, cmd[1], msg), client->getFd());
 	}
+
 }
 
 
@@ -54,7 +52,7 @@ void Server::TOPIC(int fd, std::vector<std::string> cmd)
 		ERR_NOTONCHANNEL(cli, cmd[1]);
 		return;
     }
-	if(channel->getClientInChannel(fd) != channel->getAdmins(fd))
+	if(channel->getAdmtopic() == true  && channel->getClientInChannel(fd) != channel->getAdmins(fd))
 	{
 		ERR_CHANOPRIVSNEEDED(cli, cmd[1]);
 		return;

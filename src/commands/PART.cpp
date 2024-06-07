@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PART.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:29:38 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/05 17:46:19 by teo              ###   ########.fr       */
+/*   Updated: 2024/06/07 16:52:48 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void Channel::parsePartCommand(Client *client, std::vector<std::string> cmd)
 		}
 	}
 	std::string msg = RPL_PART(client, cmd[1], reason);
+	sendMsg(client, msg);
 	sendToChannel(msg, client->getFd());
 	remAdmins(client->getFd());
 	remClients(client->getFd());

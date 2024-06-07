@@ -51,5 +51,4 @@ class Client
 		void setUser(std::string user);
 		std::string getRealname();
 		void setRealname(std::string realname);
-
 };

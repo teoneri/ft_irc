@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JOIN.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/05 17:30:20 by teo              ###   ########.fr       */
+/*   Updated: 2024/06/07 15:42:35 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
     std::string joinMessage = RPL_JOINCHANNEL(client, cmd[1]);
     sendMsg(client,  joinMessage + RPL_NAMREPLY(client->getNick(), cmd[1], channel->getClientList()) +\
 	RPL_ENDOFNAMES(client->getNick(), cmd[1]));
+	channel->sendToChannel(joinMessage, client->getFd());
 	// sendMsg(client, RPL_NAMREPLY(client->getNick(), cmd[1], channel->getClientList()));
 	// sendMsg(client, RPL_ENDOFNAMES(client->getNick(), cmd[1]));
 	// RPL_CHANNELMODEIS(client, cmd[1], channel->displayMode());

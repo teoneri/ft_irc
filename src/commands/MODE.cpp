@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MODE.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 16:18:35 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/05 18:19:07 by teo              ###   ########.fr       */
+/*   Updated: 2024/06/07 18:43:30 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 {
 	size_t arg = 3;
 	std::string modsadded = "+";
+	std::vector<int> error;
 	for(int i = 0; mode[i]; i++)
 	{
 		switch (mode[i])
@@ -58,7 +59,7 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 			if(cmd.size() <= 3)
 			{
 				ERR_INVALIDMODEPARAM(client, cmd[1], "k");
-				return ;
+				error.push_back(i);
 			}
 			else if(_password.empty())
 			{	
@@ -74,9 +75,14 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 			if(cmd.size() <= 3 )
 			{
 				ERR_INVALIDMODEPARAM(client, cmd[1], "o");
-				return ;
+				error.push_back(i);
 			}
-			if(!getAdminbyName(cmd[arg]))
+			else if(!getClientbyName(cmd[arg]))
+			{
+				ERR_NOSUCHNICK(client, cmd[arg]);
+				error.push_back(i);
+			}	
+			else if(!getAdminbyName(cmd[arg]))
 			{	
 				Client *cli = getClientbyName(cmd[arg]);
 				if(cli)
@@ -89,17 +95,16 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 		}
 		case 'l':
 		{
-			if(cmd.size() <= 3 && !isAllNumbers(cmd[arg]))
+			if(cmd.size() <= 3 || !isAllNumbers(cmd[arg]))
 			{
 				ERR_INVALIDMODEPARAM(client, cmd[1], "l");
-				return ;
+				error.push_back(i);
 			}
 			else if(client_cap < 0)
 			{	
 				client_cap = std::atoi(cmd[arg].c_str());
 				modes.push_back("l");
 				modsadded += "l";
-
 			}
 			arg++;
 			break;
@@ -107,20 +112,34 @@ void Channel::addMode(Client *client, std::vector<std::string> cmd, std::string 
 		default:
 		{
 			ERR_UNKNOWNMODE(client);
-			return;
 		}
 		}
 	}
-		std::string target = "";
-		if(cmd.size() > 3)
-			target = " " + cmd[3];
-		sendMsg(client, RPL_MODE(client, cmd[1], modsadded, target));
+	std::string target = "";
+	if(cmd.size() > 3)
+	{
+		size_t i = 3;
+		int j = 0;
+		while(i < cmd.size())
+		{
+			std::vector<int>::iterator it = std::find(error.begin(), error.end(), j);
+			if(i != cmd.size())
+				target += " ";
+			if(it == error.end())
+				target += cmd[i];
+			i++;
+			j++;
+		}
+	}	
+	sendMsg(client, RPL_MODE(client, cmd[1], modsadded, target));
+	sendToChannel(RPL_MODE(client, cmd[1], modsadded, target), client->getFd());
 }
 
 void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string mode)
 {
 	std::vector<std::string>::iterator it;
 	size_t arg = 3;
+	std::string modsremoved = "-";
 	for(int i = 0; mode[i]; i++)
 	{
 		switch (mode[i])
@@ -132,6 +151,7 @@ void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string
 		        it = std::find(modes.begin(), modes.end(), "i");
 				inv_only = false;
 				modes.erase(it);
+				modsremoved += "i";
 			}
 			break;
 		}
@@ -142,6 +162,7 @@ void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string
 		        it = std::find(modes.begin(), modes.end(), "t");
 				adm_topic = false;
 				modes.erase(it);
+				modsremoved += "t";
 			}
 			break;
 		}
@@ -152,6 +173,7 @@ void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string
 		        it = std::find(modes.begin(), modes.end(), "k");
 				_password.clear();
 				modes.erase(it);
+				modsremoved += "k";
 			}
 			break;
 		}
@@ -160,13 +182,13 @@ void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string
 			if(cmd.size() <= 3 )
 			{
 				ERR_INVALIDMODEPARAM(client, cmd[1], "o");
-				return ;
 			}
 			if(getAdminbyName(cmd[arg]))
 			{	
 				Client *cli = getAdminbyName(cmd[arg]);
 				if(cli)
 					remAdmins(cli->getFd());
+				modsremoved += "o";
 			}
 			arg++;
 			break;
@@ -178,13 +200,19 @@ void Channel::remMode(Client *client, std::vector<std::string> cmd,  std::string
 		        it = std::find(modes.begin(), modes.end(), "l");
 				client_cap = -1;
 				modes.erase(it);
+				modsremoved += "l";
 			}
 		}
 		default:
 			break;
 		}
 	}
-	}
+	std::string target = "";
+	if(cmd.size() > 3)
+		target = " " + cmd[3];
+	sendMsg(client, RPL_MODE(client, cmd[1], modsremoved, target));
+	sendToChannel(RPL_MODE(client, cmd[1], modsremoved, target), client->getFd());
+}
 
 std::string Channel::displayMode()
 {

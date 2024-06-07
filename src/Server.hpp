@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:29:06 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 17:04:56 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/07 16:16:41 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ class Server
 		void channelNotFound(Client *client, std::string name);
 		void parseInviteCommand(Client *client, std::vector<std::string> cmd, Channel *channel);
 		void parseMsgCommand(Client *client, std::vector<std::string> cmd, Channel *channel, Client *recipient);
+		void sendToAllChannels(std::string msg, int fd);
 		void PASS(int fd, std::vector<std::string> cmd);
 		void NICK(int fd, std::vector<std::string> cmd);
 		void USER(int fd, std::vector<std::string> cmd);

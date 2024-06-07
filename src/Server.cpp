@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/04 16:09:50 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/07 16:58:52 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,9 @@ void Server::ReceiveNewData(int fd)
 void Server::parseCommand(int fd, std::string tmp)
 {
 	std::vector<std::string> cmd = splitBuffCommand(tmp);
-	if((cmd[0] == "PASS" || cmd[0] == "pass"))
+	if(cmd.empty())
+		return;
+	else if((cmd[0] == "PASS" || cmd[0] == "pass"))
 		PASS(fd, cmd);
 	else if((cmd[0] == "NICK" || cmd[0] == "nick"))
 		NICK(fd, cmd);
@@ -298,7 +300,10 @@ void Server::NICK(int fd, std::vector<std::string> cmd)
 		}
 	}
 	if(cli->getRegistered())
+	{
 		sendMsg(cli, RPL_NICKCHANGE(cli->getNick(), cmd[1]));
+		sendToAllChannels(RPL_NICKCHANGE(cli->getNick(), cmd[1]), cli->getFd());
+	}
 	cli->setNick(cmd[1]);
 	cli->setNicked(true);
 	if(cli->getUsered() && !cli->getRegistered())
@@ -347,4 +352,14 @@ Client *Server::getClientbyName(std::string name)
 			return &(*it);
 	}
 	return NULL;
+}
+
+void Server::sendToAllChannels(std::string msg, int fd)
+{
+	std::vector<Channel>::iterator it;
+	for (it = channels.begin(); it != channels.end(); it++)
+	{
+		if (it->getClient(fd))
+			it->sendToChannel(msg, fd);
+	}
 }

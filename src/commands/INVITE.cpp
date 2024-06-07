@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   INVITE.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:51:38 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/05 17:45:53 by teo              ###   ########.fr       */
+/*   Updated: 2024/06/07 16:09:41 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ void Server::parseInviteCommand(Client *client, std::vector<std::string> cmd, Ch
     }
 	channel->addInvited(inv);
 	msg = RPL_INVITING(client, cmd[1], cmd[2]);
-	channel->sendToChannel(msg, client->getFd());
+	sendMsg(client, msg);
+	msg = RPL_INVITED(inv, cmd[1], cmd[2]);
+	sendMsg(inv, msg);
 }
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: teo <teo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/05 17:55:14 by teo              ###   ########.fr       */
+/*   Updated: 2024/06/07 16:34:03 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void sendMsg(Client *client, std::string msg);
 std::string RPL_JOINCHANNEL(Client *client, std::string channelname);
 std::string RPL_KICKCHANNEL(Client *client, std::string channelname, std::string kicked, std::string reason);
 std::string RPL_INVITING(Client *client, std::string invited, std::string channel);
+std::string RPL_INVITED(Client *client, std::string invited, std::string channel);
 std::string RPL_PART(Client *client, std::string channel, std::string reason);
 std::string RPL_QUIT(Client *client, std::string reason);
 std::string RPL_MSG(Client *client, std::string recipient, std::string msg);
@@ -30,8 +31,9 @@ std::string RPL_CREATIONTIME(std::string nick, std::string channel, std::string 
 std::string RPL_ENDOFNAMES(std::string nick, std::string channel);
 std::string RPL_NICKCHANGE(std::string oldnickname, std::string newnickname);
 std::string	RPL_MODE(Client *client, std::string channel, std::string mode, std::string target);
-
-// ERRORS //
+std::string RPL_SETTOPIC(Client *client, std::string channel, std::string topic);
+std::string RPL_TOPIC(Client *client, std::string channel, std::string topic);
+// :mneri!mneri INVITE mneri #foo// ERRORS //
 void ERR_ALREADYREGISTERED(Client *client);
 void ERR_NEEDMOREPARAMS(Client *client, std::string cmd);
 void ERR_PASSWDMISMATCH(Client *client);
@@ -59,5 +61,3 @@ void ERR_CMDNOTFOUND(Client *client, std::string cmd);
 
 void RPL_WELCOME(Client *client);
 void RPL_CHANNELMODEIS(Client *client, std::string channel, std::string modestring);
-void RPL_TOPIC(Client *client, std::string channel, std::string topic);
-
