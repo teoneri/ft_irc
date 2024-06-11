@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:32:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/07 15:42:35 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/11 16:21:30 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,8 @@ void Server::channelNotFound(Client *client, std::string name)
 	newChannel.addClient(client);
 	newChannel.setCreationTime();
 	channels.push_back(newChannel);
-	// Channel& chan = channels.back();
     sendMsg(client,  RPL_JOINCHANNEL(client, name) + RPL_NAMREPLY(client->getNick(), newChannel.getName(), newChannel.getClientList()) +\
 	RPL_ENDOFNAMES(client->getNick(), name));
-	// sendMsg(client, RPL_NAMREPLY(client->getNick(), name, newChannel.getClientList()));
-	// sendMsg(client, RPL_ENDOFNAMES(client->getNick(), name));
-	// RPL_CHANNELMODEIS(client, name, newChannel.displayMode());
-	// sendMsg(client, RPL_CREATIONTIME(client->getNick(), name, newChannel.getCreationTime()));
-	// RPL_TOPIC(client, newChannel.getName(), newChannel.getTopic());
 }
 
 
@@ -57,7 +51,7 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
 	}
 	if(channel->getClientcap() > 0 && channel->countClients() >= (size_t)channel->getClientcap())
 	{
-		sendMsg(client, "Client cap exceeded.\n");
+		ERR_CLIENTCAP(client, cmd[1]);
 		return;
 	}
 	channel->addClient(client);
@@ -65,11 +59,6 @@ void Server::channelFound(Client *client, Channel *channel, std::vector<std::str
     sendMsg(client,  joinMessage + RPL_NAMREPLY(client->getNick(), cmd[1], channel->getClientList()) +\
 	RPL_ENDOFNAMES(client->getNick(), cmd[1]));
 	channel->sendToChannel(joinMessage, client->getFd());
-	// sendMsg(client, RPL_NAMREPLY(client->getNick(), cmd[1], channel->getClientList()));
-	// sendMsg(client, RPL_ENDOFNAMES(client->getNick(), cmd[1]));
-	// RPL_CHANNELMODEIS(client, cmd[1], channel->displayMode());
-	// sendMsg(client, RPL_CREATIONTIME(client->getNick(), cmd[1], channel->getCreationTime()));
-	// RPL_TOPIC(client, channel->getName(), channel->getTopic());
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:57:54 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/03 17:34:59 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/11 18:00:30 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void Client::setNick(std::string nickname)
 }
 void Client::setBuff(std::string buff)
 {
-	_buff = buff;
+	_buff += buff;
 }
 
 void Client::setFd(int fd)

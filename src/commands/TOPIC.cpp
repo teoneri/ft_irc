@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 17:48:41 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/07 17:12:18 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/11 16:23:21 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ void Channel::parseTopicCommand(Client *client, std::vector<std::string> cmd)
 	}
 	else
 	{
+		if(getAdmtopic() == true  && getClientInChannel(client->getFd()) != getAdmins(client->getFd()))
+		{
+			ERR_CHANOPRIVSNEEDED(client, cmd[1]);
+			return;
+		}
 		std::string msg;
 		for(size_t arg = 2; arg < cmd.size(); arg++)
 			msg += cmd[arg] + " ";
@@ -52,11 +57,6 @@ void Server::TOPIC(int fd, std::vector<std::string> cmd)
 		ERR_NOTONCHANNEL(cli, cmd[1]);
 		return;
     }
-	if(channel->getAdmtopic() == true  && channel->getClientInChannel(fd) != channel->getAdmins(fd))
-	{
-		ERR_CHANOPRIVSNEEDED(cli, cmd[1]);
-		return;
-	}
 	channel->parseTopicCommand(cli, cmd);
 		
 }	

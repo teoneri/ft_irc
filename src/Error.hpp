@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:22:24 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/07 16:34:03 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/11 16:15:34 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void ERR_NORECIPIENT(Client *client);
 void ERR_NOSUCHNICK(Client *client, std::string nick);
 void ERR_NOTEXTOSEND(Client *client);
 void ERR_CMDNOTFOUND(Client *client, std::string cmd);
+void ERR_CLIENTCAP(Client *client, std::string channelname);
+
 // RESPONSES //
 
 void RPL_WELCOME(Client *client);

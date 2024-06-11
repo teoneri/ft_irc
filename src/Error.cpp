@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:28:37 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/07 17:14:34 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/11 16:27:18 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void ERR_TOOMANYCHANNELS(Client *client, std::string channel){ std::string str =
 void ERR_BADCHANNELKEY(Client *client, std::string channel){ std::string str = ": 475 " + client->getNick() + " " + channel + ": Cannot join channel (+k)\r\n"; sendMsg(client, str);}
 void ERR_ALREADYJOIN(Client *client, std::string channelname){ std::string str =  client->getNick() + " already joined " + channelname + "\r\n"; sendMsg(client, str);}
 void ERR_INVITEONLYCHAN(Client *client, std::string channelname){ std::string str =  ": 473 " + client->getNick() + " " + channelname + ": Cannot join channel (+i)\r\n"; sendMsg(client, str);}
-void ERR_CHANOPRIVSNEEDED(Client *client, std::string channel){  std::string str = ": 482 " + client->getNick() + " " + channel + ": You're not channel operator\r\n"; sendMsg(client, str);}
+void ERR_CLIENTCAP(Client *client, std::string channelname){ std::string str =  ": 471 " + client->getNick() + " " + channelname + ": Cannot join channel (+l)\r\n"; sendMsg(client, str);}
+void ERR_CHANOPRIVSNEEDED(Client *client, std::string channel){  std::string str = ": 482 " + channel + " :You're not channel operator\r\n"; sendMsg(client, str);}
 void ERR_INVALIDMODEPARAM(Client *client, std::string channel, std::string param){ std::string str =  ": 696 " + client->getNick() + " " + channel + " :Missing parameter for MODE (" + param + ") \r\n"; sendMsg(client, str);}
 void ERR_UNKNOWNMODE(Client *client){ std::string str =  ": 472 " + client->getNick() + " " + ": Unkwown mode char\r\n"; sendMsg(client, str);}
 void ERR_USERNOTINCHANNEL(Client *client, std::string nick, std::string channel){std::string str =  ": 441 " + client->getNick() + " " + nick + " " + channel + ": They aren't on that channel\r\n"; sendMsg(client, str);}

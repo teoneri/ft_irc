@@ -6,7 +6,7 @@
 /*   By: mneri <mneri@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 16:32:20 by mneri             #+#    #+#             */
-/*   Updated: 2024/06/07 16:58:52 by mneri            ###   ########.fr       */
+/*   Updated: 2024/06/11 18:06:33 by mneri            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,17 +204,14 @@ void Server::ReceiveNewData(int fd)
 	ssize_t bytes = recv(fd, buff, sizeof(buff) - 1, 0);
 	if(bytes <= 0)
 	{
-		std::cout << RED << "Client " << client->getNick() << " <" << client->getFd() << "> " << " disconnected\n" << WHITE;
-		removeClient(fd);
-		close(fd);
-		
+		QUIT(fd, tmp);
 	}
 	else
 	{
 		client->setBuff(buff);
 		if(client->getBuff().find_first_of("\r\n") == std::string::npos)
 			return;
-		tmp = SplitRN(buff);
+		tmp = SplitRN(client->getBuff());
 		for(size_t i = 0; i < tmp.size(); i++)
 			parseCommand(fd, tmp[i]);
 		if(getClient(fd))
